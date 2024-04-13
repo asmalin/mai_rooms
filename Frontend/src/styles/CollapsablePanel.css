@@ -1,0 +1,27 @@
+.panelHeader{
+    padding: 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panelBottom{
+    padding: 10px;
+}
+
+.free_bottom, .schedule_lesson_bottom, .reserved_lesson_bottom{
+    border-top: 3px solid;
+}
+
+.free_bottom{
+    border-color: rgb(24, 190, 24);
+}
+
+.schedule_lesson_bottom{
+    border-color: rgb(138, 132, 132);
+}
+
+.reserved_lesson_bottom{
+    border-color: rgb(57, 57, 224)
+}

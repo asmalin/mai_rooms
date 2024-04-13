@@ -1,0 +1,9 @@
+textarea {
+    width: 100%; 
+    resize: vertical;
+    padding: 10px;
+  }
+
+ul{
+  list-style-type: none;
+}

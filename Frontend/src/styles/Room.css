@@ -1,0 +1,35 @@
+.roomName{
+    margin-top: 25px;
+}
+
+.lesson{
+    min-height: 50px;
+    width: 98%;
+    margin: 10px auto;
+    display: flex;
+    align-items: center;
+}
+
+.lesson:not(:first-child){
+    margin-top: 10px;
+}
+
+.free{
+    border-color: rgb(24, 190, 24);
+}
+
+.schedule_lesson{
+    border-color: rgb(138, 132, 132);
+}
+
+.reserved_lesson{
+    border-color: rgb(57, 57, 224)
+}
+
+.free, .schedule_lesson, .reserved_lesson{
+    border-width: 3px;
+    border-style: solid;
+    border-radius: 15px;
+    width: 100%;
+}
+

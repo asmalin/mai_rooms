@@ -1,0 +1,15 @@
+.select-building{
+    margin: 0 auto;
+    max-width: 500px;
+    text-align: center;
+
+}
+
+.emptySelectedRoomsError{
+    color: rgb(194, 51, 51);
+}
+
+.selectRoomButton{
+    margin-top: 25px;
+    max-width: 200px;
+}
