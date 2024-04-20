@@ -18,9 +18,27 @@ func NewLessonPostgres(db *gorm.DB) *LessonPostgres {
 
 func (l *LessonPostgres) GetScheduleLessons(roomId int, date time.Time) ([]models.Lesson, error) {
 	var lessons []models.Lesson
-	result := l.db.Where("room_id = ? AND date = ?", roomId, date).Find(&lessons)
+
+	result := l.db.Raw(`
+		SELECT 
+			MAX(lector) as lector,
+			date,
+			time_start,
+			time_end,
+			name,
+			STRING_AGG(groups::TEXT, ', ') AS groups,
+			type,
+			room_id
+		FROM 
+			lessons
+		WHERE 
+			room_id = ? AND date = ?
+		GROUP BY 
+			date, time_start, time_end, name, type, room_id
+	`, roomId, date).Scan(&lessons)
+
 	if result.Error != nil {
-		return nil, errors.New("ошибка при получении данных")
+		return nil, result.Error
 	}
 	return lessons, nil
 }

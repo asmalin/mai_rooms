@@ -34,7 +34,10 @@ function App() {
         <div className="wrapper">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/rooms" element={<Rooms />} />
+            <Route
+              path="/rooms"
+              element={<Rooms user_id={user ? user.id : null} />}
+            />
             <Route path="/info" element={<Info />} />
             <Route
               path="/login"

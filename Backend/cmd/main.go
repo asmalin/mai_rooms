@@ -51,6 +51,13 @@ type Lesson struct {
 
 func main() {
 
+	// groupNames, _ := utils.GetAllGroupNames()
+	// var groups []string
+	// for _, group := range groupNames {
+	// 	groups = append(groups, group.Name)
+	// }
+	// utils.WriteToFile(groups, "allgroupNames.json")
+
 	if err := godotenv.Load("../.env"); err != nil {
 		log.Fatalf("Error loading env variables.")
 	}
@@ -83,6 +90,15 @@ func main() {
 	repo := repository.NewRepository(db)
 	services := service.NewService(repo)
 	handlers := handler.NewHandler(services)
+
+	// groupNames, _ := utils.GetAllGroupNames()
+
+	// for _, group := range groupNames {
+	// 	res, _ := utils.GetGroupSchedule(group)
+	// 	utils.InsertGroupScheduleIntoDB(res, db)
+	// }
+
+	// os.Exit(1)
 	/////////////////////
 	///////////////
 	/////////

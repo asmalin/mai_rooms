@@ -7,3 +7,15 @@ textarea {
 ul{
   list-style-type: none;
 }
+
+.cancelReserve-btn{
+  padding: 10px 20px;
+  background-color: #a83424;
+  color: #fff;
+  margin-top: 10px;
+}
+
+.cancelReserve-btn:hover{
+  background-color: #881f11;
+
+}

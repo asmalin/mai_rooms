@@ -1,35 +1,63 @@
 import React, { useEffect, useState } from "react";
 import Lesson from "./Lesson.js";
 import "../styles/Room.css";
+import {
+  getLessonNumber,
+  lessonTimeStart,
+  lessonTimeEnd,
+} from "../services/lessonsService.js";
 
-export default function Room({ roomId, date }) {
+export default function Room({ roomId, date, showOnlyFree, user_id }) {
   const [lessons, setLessons] = useState([]);
   const [roomName, setRoomName] = useState("");
 
+  const [scheduleLessons, setScheduleLessons] = useState([]);
+  const [reservedLessons, setReservedLessons] = useState([]);
+
   useEffect(() => {
-    let apiUrl = `http://localhost:8080/api/room/${roomId}`;
-    fetch(apiUrl)
+    fetch(`http://localhost:8080/api/room/${roomId}`)
       .then((response) => response.json())
       .then((data) => setRoomName(data));
 
-    apiUrl = `http://localhost:8080/api/lessons?date=${date}&room=${roomId}`;
-    fetch(apiUrl)
+    fetch(`http://localhost:8080/api/schedule?date=${date}&room=${roomId}`)
       .then((response) => response.json())
-      .then((data) => setLessons(data));
+      .then((lessons) => setScheduleLessons(getLessonNumber(lessons)));
+
+    fetchReservedRooms();
   }, [date, roomId]);
+
+  function fetchReservedRooms() {
+    fetch(
+      `http://localhost:8080/api/reserved_lesssons?date=${date}&room=${roomId}`
+    )
+      .then((response) => response.json())
+      .then((lessons) => setReservedLessons(getLessonNumber(lessons)));
+  }
 
   return (
     <>
       <span className="roomName">{roomName}</span>
       <div className="lessons">
-        {lessons.map((lesson, index) => {
+        {Object.entries(lessonTimeStart).map(([timestart, lessonNumber]) => {
+          let lesson =
+            scheduleLessons[lessonNumber] ||
+            reservedLessons[lessonNumber] ||
+            null;
+          if (showOnlyFree && lesson !== null) {
+            return null;
+          }
+
           return (
-            <div key={index} className="lesson">
+            <div key={lessonNumber} className="lesson">
               <Lesson
-                lesson={lesson}
-                lessonNumber={index + 1}
-                date={date}
+                lessonNumber={lessonNumber}
                 roomId={roomId}
+                date={date}
+                timeStart={timestart}
+                timeEnd={lessonTimeEnd[lessonNumber]}
+                lesson={lesson}
+                fetchReservedRooms={fetchReservedRooms}
+                user_id={user_id}
               />
             </div>
           );

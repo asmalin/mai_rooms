@@ -7,3 +7,12 @@
     margin-top: 35px;
 }
 
+.settingChanges{
+    display: flex;
+    justify-content: space-between;
+}
+
+.settingChanges label{
+    margin-left: 10px;
+    font-weight: normal;
+}

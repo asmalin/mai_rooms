@@ -50,7 +50,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		api.GET("/buildings", h.GetAllBuildings)
 		api.GET("/rooms/:buildingId", h.GetRoomsByBuilding)
 		api.GET("/room/:roomId", h.GetRoomNameById)
-		api.GET("/lessons", h.GetLessonsByRoomAndDate)
+		api.GET("/schedule", h.GetScheduleByRoomAndDate)
+		api.GET("/reserved_lesssons", h.GetReservedLessonsByRoomAndDate)
 	}
 	return router
 }

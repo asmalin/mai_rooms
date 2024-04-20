@@ -8,6 +8,7 @@
 
 .panelBottom{
     padding: 10px;
+    word-wrap: break-word;
 }
 
 .free_bottom, .schedule_lesson_bottom, .reserved_lesson_bottom{

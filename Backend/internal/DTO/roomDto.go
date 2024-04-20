@@ -1,5 +1,7 @@
 package dto
 
+import "time"
+
 type RoomDto struct {
 	Id   int    `json:"id"`
 	Name string `json:"name"`
@@ -16,8 +18,16 @@ type ScheduleLessonDto struct {
 
 type ReservedLessonDto struct {
 	ReserverName string `json:"reserver"`
+	ReserverId   int    `json:"reserver_id"`
+	Date         string `json:"date"`
 	StartTime    string `json:"time_start"`
 	EndTime      string `json:"time_end"`
 	Comment      string `json:"comment"`
-	Reserved     bool   `json:"reserved"`
+}
+
+type LessonForCancelReservationDto struct {
+	ReserverId int       `json:"reserver_id"`
+	Room_id    int       `json:"room_id"`
+	Date       time.Time `json:"date"`
+	StartTime  string    `json:"time_start"`
 }

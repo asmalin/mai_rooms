@@ -29,10 +29,11 @@ type Lesson struct {
 }
 
 type ReservedLesson struct {
-	ID      int       `json:"-"`
-	User_id int       `json:"user_id"`
-	Room_id int       `json:"room_id"`
-	Date    time.Time `json:"date" gorm:"type: timestamp without time zone"`
-	//StartTime time.Time `json:"startTime" gorm:"type: time without time zone"`
-	Comment string `json:"comment"`
+	ID        int       `json:"-"`
+	User_id   int       `json:"user_id"`
+	Room_id   int       `json:"room_id"`
+	Date      time.Time `json:"date" gorm:"type: date"`
+	TimeStart string    `json:"time_start" gorm:"type: timestamp without time zone"`
+	TimeEnd   string    `json:"time_end" gorm:"type: timestamp without time zone"`
+	Comment   string    `json:"comment"`
 }

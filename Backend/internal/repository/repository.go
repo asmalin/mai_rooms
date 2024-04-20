@@ -14,6 +14,8 @@ type Login interface {
 
 type Reservation interface {
 	ReserveRoom(models.ReservedLesson) error
+	CancelReservation(reservedLesson_id int) error
+	GetReservedLesson(roomId int, date string, startTime string) (models.ReservedLesson, error)
 	GetReservedLessons(roomId int, date string) ([]models.ReservedLesson, error)
 }
 
