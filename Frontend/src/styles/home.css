@@ -13,3 +13,20 @@
     margin-top: 25px;
     max-width: 200px;
 }
+
+.roomsList{
+    display: flex !important;
+    flex-wrap: wrap;
+    padding: 0 !important;
+}
+
+
+.btn-room{
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 15px 5px 10px 0px;
+}
+
+.btn-room label{
+    margin-left: 10px;
+}

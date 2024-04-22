@@ -99,16 +99,21 @@ func main() {
 		queryData := strings.Split(query.Data, "|")
 		btnPrefix := queryData[0]
 
+		var roomId string
+		var roomName string
+		var buildingId string
+		var buildingName string
+
 		if btnPrefix == buttonsPrefixes.Building {
-			buildingName := queryData[1]
-			buidldingId := queryData[2]
-			rooms := Rooms(buidldingId)
+			buildingName = queryData[1]
+			buildingId = queryData[2]
+			rooms := Rooms(buildingId)
 
 			buttonsData := make([]ButtonData, len(rooms))
 			for index, room := range rooms {
 				buttonsData[index] = ButtonData{
 					ButtonName:   room.Name,
-					CallBackData: buttonsPrefixes.Room + "|" + room.Name + "|" + fmt.Sprint(room.ID) + "|" + buildingName + "|" + buidldingId}
+					CallBackData: buttonsPrefixes.Room + "|" + room.Name + "|" + fmt.Sprint(room.ID) + "|" + buildingName + "|" + buildingId}
 			}
 
 			buttonsInRow := 3
@@ -128,11 +133,11 @@ func main() {
 			}
 
 		} else if btnPrefix == buttonsPrefixes.Room {
-			roomName := queryData[1]
-			roomId := queryData[2]
+			//roomName := queryData[1]
+			//roomId := queryData[2]
 
-			buildingName := queryData[3]
-			buidldingId := queryData[4]
+			buildingName = queryData[3]
+			buildingId = queryData[4]
 
 			currentTime := time.Now()
 			location, _ := time.LoadLocation("Europe/Moscow")
@@ -166,13 +171,13 @@ func main() {
 			for _, lesson := range schedule {
 				buttonsData[lessons_timeStart[lesson.StartTime]-1] = ButtonData{
 					ButtonName:   fmt.Sprint(lessons_timeStart[lesson.StartTime]) + ". " + lesson.StartTime + " - " + lesson.EndTime + " По расписанию 📅",
-					CallBackData: buttonsPrefixes.Lesson + "|" + roomName + "|" + roomId + "|" + lesson.StartTime + "|" + lesson.EndTime + "|" + date + "|" + buildingName + "|" + buidldingId}
+					CallBackData: buttonsPrefixes.Lesson + "|" + roomName + "|" + roomId + "|" + lesson.StartTime + "|" + lesson.EndTime + "|" + date + "|" + buildingName + "|" + buildingId}
 			}
 
 			for _, lesson := range reserved {
 				buttonsData[lessons_timeStart[lesson.StartTime]-1] = ButtonData{
 					ButtonName:   fmt.Sprint(lessons_timeStart[lesson.StartTime]) + ". " + lesson.StartTime + " - " + lesson.EndTime + " Забронировано 🔶",
-					CallBackData: buttonsPrefixes.Lesson + "|" + roomName + "|" + roomId + "|" + lesson.StartTime + "|" + lesson.EndTime + "|" + date + "|" + buildingName + "|" + buidldingId}
+					CallBackData: buttonsPrefixes.Lesson + "|" + roomName + "|" + roomId + "|" + lesson.StartTime + "|" + lesson.EndTime + "|" + date + "|" + buildingName + "|" + buildingId}
 			}
 
 			for timeStart, lessonNumber := range lessons_timeStart {
@@ -180,7 +185,7 @@ func main() {
 				if buttonsData[lessonNumber-1].ButtonName == "" {
 					buttonsData[lessonNumber-1] = ButtonData{
 						ButtonName:   fmt.Sprint(lessonNumber) + ". " + timeStart + " - " + lessons_timeEnd[lessonNumber] + " Свободно ✅",
-						CallBackData: buttonsPrefixes.Lesson + "|" + roomName + "|" + roomId + "|" + timeStart + "|" + lessons_timeEnd[lessonNumber] + "|" + date + "|" + buildingName + "|" + buidldingId}
+						CallBackData: buttonsPrefixes.Lesson + "|" + roomName + "|" + roomId + "|" + timeStart + "|" + lessons_timeEnd[lessonNumber] + "|" + date + "|" + buildingName + "|" + buildingId}
 				}
 			}
 
@@ -189,7 +194,7 @@ func main() {
 			_ = bot.AnswerCallbackQuery(tu.CallbackQuery(query.ID))
 
 			keyboard := CreateKeyboard(buttonsData, buttonsInRow)
-			prevBtn := []telego.InlineKeyboardButton{tu.InlineKeyboardButton("Назад").WithCallbackData(buttonsPrefixes.Building + "|" + buildingName + "|" + buidldingId)}
+			prevBtn := []telego.InlineKeyboardButton{tu.InlineKeyboardButton("Назад").WithCallbackData(buttonsPrefixes.Building + "|" + buildingName + "|" + buildingId)}
 			keyboard.InlineKeyboard = append(keyboard.InlineKeyboard, prevBtn)
 
 			chatId := telego.ChatID{ID: query.Message.GetChat().ID}
@@ -203,20 +208,20 @@ func main() {
 				fmt.Println("Ошибка при редактировании сообщения:", err)
 			}
 		} else if btnPrefix == buttonsPrefixes.Lesson {
-
+			fmt.Println("les")
 			chatId := telego.ChatID{ID: query.Message.GetChat().ID}
 
-			roomName := queryData[1]
-			roomId := queryData[2]
+			roomName = queryData[1]
+			roomId = queryData[2]
 			timeStart := queryData[3]
 			timeEnd := queryData[4]
 			date := queryData[5]
-			buildingName := queryData[6]
-			buildingId := queryData[7]
+			buildingName = queryData[6]
+			buildingId = queryData[7]
 
 			lesson, lessonType := LessonInfo(roomId, date, timeStart)
 
-			msg := roomName + " (" + date + ")\n\n" + timeStart + " - " + timeEnd + "\n\n"
+			msg := "<b>" + roomName + " (" + date + ")</b>\n\n" + timeStart + " - " + timeEnd + "\n\n"
 
 			var buttons [][]telego.InlineKeyboardButton
 			var keyRow []telego.InlineKeyboardButton
@@ -245,6 +250,7 @@ func main() {
 				MessageID:   query.Message.GetMessageID(),
 				Text:        msg,
 				ReplyMarkup: &telego.InlineKeyboardMarkup{InlineKeyboard: buttons},
+				ParseMode:   "HTML",
 			})
 			if err != nil {
 				fmt.Println(err)
@@ -252,7 +258,10 @@ func main() {
 
 		} else if btnPrefix == buttonsPrefixes.Reserve {
 
+			//buildingId
+			//buildingName
 			roomId := queryData[1]
+			//roomName
 			date := queryData[2]
 			timeStart := queryData[3]
 			timeEnd := queryData[4]
@@ -276,10 +285,27 @@ func main() {
 				return
 			}
 
-			bot.SendMessage(tu.Message(
-				chatId,
-				"Аудитория успешно забронирована!",
-			))
+			var buttons [][]telego.InlineKeyboardButton
+			var keyRow []telego.InlineKeyboardButton
+
+			keyRow = append(keyRow, tu.InlineKeyboardButton("Назад").WithCallbackData(buttonsPrefixes.Room+"|"+roomName+"|"+roomId+"|"+buildingName+"|"+buildingId))
+			buttons = append(buttons, keyRow)
+
+			_, err := bot.EditMessageText(&telego.EditMessageTextParams{
+				ChatID:      chatId,
+				MessageID:   query.Message.GetMessageID(),
+				Text:        "Аудитория успешно забронирована!",
+				ReplyMarkup: &telego.InlineKeyboardMarkup{InlineKeyboard: buttons},
+			})
+
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			// bot.SendMessage(tu.Message(
+			// 	chatId,
+			// 	"Аудитория успешно забронирована!",
+			// ))
 
 		}
 

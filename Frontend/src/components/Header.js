@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import "../styles/Header.css";
 
 export default function Header({ isLoggedIn, setIsLoggedIn, userFullName }) {
@@ -17,18 +17,22 @@ export default function Header({ isLoggedIn, setIsLoggedIn, userFullName }) {
   };
 
   return (
-    <>
-      <nav className="navbar wrapper">
+    <div className="wrapper">
+      <nav className="navbar">
         <ul className="navbar__list">
           <li className="navbar__item">
-            <Link to="/" className="navbar__link">
+            <NavLink to="/" className="navbar__link" activeclassname="active">
               MAI rooms
-            </Link>
+            </NavLink>
           </li>
           <li className="navbar__item">
-            <Link to="/info" className="navbar__link">
+            <NavLink
+              to="/info"
+              className="navbar__link"
+              activeclassname="active"
+            >
               Инфо
-            </Link>
+            </NavLink>
           </li>
         </ul>
         {isLoggedIn ? (
@@ -48,6 +52,6 @@ export default function Header({ isLoggedIn, setIsLoggedIn, userFullName }) {
           )
         )}
       </nav>
-    </>
+    </div>
   );
 }

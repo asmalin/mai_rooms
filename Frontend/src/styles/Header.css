@@ -3,23 +3,42 @@
     justify-content: space-between;
     align-items: center;
     min-height: 56px;
+    margin-left: 20px;
+    margin-right: 20px; 
   }
   
   .navbar__list {
     list-style-type: none;
-    margin: 0;
     padding: 0;
+    margin: 0;
   }
   
   .navbar__item {
-    display: inline;
-    margin-right: 1rem;
+    display: inline-block;
+    margin-right: 10px;
   }
   
   .navbar__link {
     text-decoration: none;
-    color: #333;
-    font-weight: bold;
+    color: #000; 
+  }
+  
+  .navbar__link:hover {
+    text-decoration: underline; 
+  }
+  
+  .active .navbar__link {
+    color: blue; 
+    font-weight: bold; 
+  }
+  
+  .navbar__link:hover {
+    text-decoration: underline; 
+  }
+  
+  .active {
+    color: rgb(0, 0, 0);
+    font-weight: bold; 
   }
   
   .navbar__auth{
@@ -60,3 +79,5 @@
   .logout-btn:hover {
     background-color: #8f0303;
   }
+
+ 

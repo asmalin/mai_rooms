@@ -9,17 +9,17 @@ footer {
     
   }
   
-  .social {
-    position: absolute;
-    right: 7%;
-  }
+.social {
+  position: absolute;
+  right: 7%;
+}
 
-  .social .logo{
-    width: 55px;
-  }
+.social .logo{
+  width: 55px;
+}
 
-  .social a{
-    border: none;
-  }
-  
+.social a{
+  border: none;
+}
+
   

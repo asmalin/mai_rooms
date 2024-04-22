@@ -53,9 +53,16 @@ export default function Lesson({ fetchReservedRooms, user_id, ...props }) {
   let panelTitle =
     props.lessonNumber + ". " + props.timeStart + "-" + props.timeEnd + " ";
   if (!props.lesson) {
-    panelTitle += "Свободно";
     return (
-      <CollapsablePanel title={`${panelTitle}`} type={"free"}>
+      <CollapsablePanel
+        title={
+          <>
+            <span className="lessonTime">{panelTitle}</span>
+            <span>Свободно</span>
+          </>
+        }
+        type={"free"}
+      >
         <div>
           <textarea
             value={comment}
@@ -69,11 +76,24 @@ export default function Lesson({ fetchReservedRooms, user_id, ...props }) {
     );
   } else if (props.lesson.reserver) {
     const { reserver, comment } = props.lesson;
-    panelTitle += reserver;
     return (
-      <CollapsablePanel title={`${panelTitle}`} type={"reserved_lesson"}>
-        <div>Комменатрий: {comment}</div>
-        {props.lesson.reserver_id == user_id && (
+      <CollapsablePanel
+        title={
+          <>
+            <span className="lessonTime">{panelTitle}</span>
+            <span>{reserver}</span>
+          </>
+        }
+        type={"reserved_lesson"}
+      >
+        <ul>
+          <li>
+            <strong>Комментарий: </strong>
+            {comment || "без объяснения причины!"}
+          </li>
+        </ul>
+
+        {props.lesson.reserver_id === user_id && (
           <button
             className="cancelReserve-btn"
             onClick={cancelReservationHandler}
@@ -85,9 +105,18 @@ export default function Lesson({ fetchReservedRooms, user_id, ...props }) {
     );
   } else {
     const { lector, subject, groups, type } = props.lesson;
-    panelTitle += lector;
+    //panelTitle ;
+
     return (
-      <CollapsablePanel title={`${panelTitle}`} type={"schedule_lesson"}>
+      <CollapsablePanel
+        title={
+          <>
+            <span className="lessonTime">{panelTitle}</span>
+            <span>{lector || "Информация о преподавателе отсутствует"}</span>
+          </>
+        }
+        type={"schedule_lesson"}
+      >
         <ul>
           <li>
             {subject} ({type})

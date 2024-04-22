@@ -75,6 +75,7 @@ function Home() {
       <div className="select-building">
         <h2>Выберете корпус</h2>
         <select
+          className="form-select"
           onChange={(e) => setSelectedBuilding(e.target.value)}
           value={selectedBuilding}
         >
@@ -90,6 +91,7 @@ function Home() {
       {roomsList.length > 0 && (
         <form onSubmit={getRooms} className="roomSelectForm">
           <input
+            className="date_input"
             type="date"
             pattern="\d{4}-\d{2}-\d{2}"
             name="date"
@@ -97,16 +99,19 @@ function Home() {
             onChange={handleDateChange}
             required
           />
-          <div className="roomsList">
+          <div className="roomsList form-check">
             {roomsList.map((room) => (
-              <div className="" key={room.id}>
+              <div className="btn-room" key={room.id}>
                 <input
+                  id={room.id}
                   type="checkbox"
                   name="roomId"
                   value={room.id}
                   onChange={roomChange}
                 />
-                <span> {room.name}</span>
+                <label className="form-check-label" htmlFor={room.id}>
+                  {room.name}
+                </label>
               </div>
             ))}
           </div>

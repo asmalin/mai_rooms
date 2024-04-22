@@ -43,34 +43,6 @@ func (h *Handler) GetScheduleByRoomAndDate(c *gin.Context) {
 		return
 	}
 
-	// lessons := []ILesson{
-	// 	FreeLesson{RoomId: roomId, StartTime: "09:00", EndTime: "10:30", Free: true},
-	// 	FreeLesson{RoomId: roomId, StartTime: "10:45", EndTime: "12:15", Free: true},
-	// 	FreeLesson{RoomId: roomId, StartTime: "13:00", EndTime: "14:30", Free: true},
-	// 	FreeLesson{RoomId: roomId, StartTime: "14:45", EndTime: "16:15", Free: true},
-	// 	FreeLesson{RoomId: roomId, StartTime: "16:30", EndTime: "18:00", Free: true},
-	// 	FreeLesson{RoomId: roomId, StartTime: "18:15", EndTime: "19:45", Free: true},
-	// 	FreeLesson{RoomId: roomId, StartTime: "20:00", EndTime: "21:30", Free: true},
-	// }
-
-	// lessonsStartTime := map[string]int{
-	// 	"09:00": 0,
-	// 	"10:45": 1,
-	// 	"13:00": 2,
-	// 	"14:45": 3,
-	// 	"16:30": 4,
-	// 	"18:15": 5,
-	// 	"20:00": 6,
-	// }
-
-	// for _, lesson := range reservedLessonsDTO {
-	// 	lessons[lessonsStartTime[lesson.StartTime]] = lesson
-	// }
-
-	// for _, lesson := range scheduleLessons {
-	// 	lessons[lessonsStartTime[lesson.StartTime]] = lesson
-	// }
-
 	c.JSON(http.StatusOK, scheduleLessons)
 
 }

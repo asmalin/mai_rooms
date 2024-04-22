@@ -1,7 +1,22 @@
 import React from "react";
 
 function Info() {
-  return <div>Info</div>;
+  return (
+    <>
+      <div>
+        Здесь можно посмотреть расписание занятий на аудиторию, а также
+        забронировать свободную.
+      </div>
+      <br />
+      <div>
+        А так же есть{" "}
+        <a href="https://t.me/roomsReservation_bot" target="_blank">
+          telegram
+        </a>{" "}
+        версия приложения.
+      </div>
+    </>
+  );
 }
 
 export default Info;
