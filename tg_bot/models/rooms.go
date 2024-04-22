@@ -11,6 +11,14 @@ type Room struct {
 	Name        string `json:"name"`
 }
 
+type LessonForReservationJSON struct {
+	ChatId    string `json:"userId"`
+	RoomId    string `json:"roomId"`
+	Date      string `json:"date"`
+	StartTime string `json:"startTime"`
+	EndTime   string `json:"endTime"`
+}
+
 type Lesson interface {
 	GetLector() string
 	GetStartTime() string

@@ -10,7 +10,11 @@ function Info() {
       <br />
       <div>
         А так же есть{" "}
-        <a href="https://t.me/roomsReservation_bot" target="_blank">
+        <a
+          href="https://t.me/roomsReservation_bot"
+          target="_blank"
+          rel="noreferrer"
+        >
           telegram
         </a>{" "}
         версия приложения.
