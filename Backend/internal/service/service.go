@@ -7,6 +7,9 @@ import (
 )
 
 type Login interface {
+	TgLogin(username, password string, tgChatId int64) (err error)
+	UserIdByChatId(tgChatId int64) (userId int, err error)
+
 	GenerateToken(username, password string) (string, error)
 	ParseToken(token string) (int, error)
 	GetUserById(id int) (models.User, error)

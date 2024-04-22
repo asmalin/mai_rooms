@@ -23,10 +23,35 @@ type tokenClaims struct {
 	UserId int `json:"user_id"`
 }
 
+func (s *LoginService) TgLogin(username, password string, tgChatId int64) (err error) {
+	user, err := s.repo.GetUser(username, password)
+	if err != nil {
+		return err
+	}
+
+	err = s.repo.AddUserTgChatRelation(user.Id, tgChatId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *LoginService) UserIdByChatId(tgChatId int64) (userId int, err error) {
+
+	userChatRelation, err := s.repo.GetUserChatRelation(tgChatId)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return userChatRelation.UserId, nil
+}
+
 func (s *LoginService) GenerateToken(username, password string) (string, error) {
 
 	user, err := s.repo.GetUser(username, password)
-
 	if err != nil {
 		return "", err
 	}

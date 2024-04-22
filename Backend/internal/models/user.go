@@ -12,3 +12,9 @@ type User struct {
 	Fullname string `json:"fullname" binding:"required" gorm:"size:255"`
 	Role     string `json:"role" binding:"required" gorm:"size:50"`
 }
+
+type UserTgChatRelation struct {
+	UserId   int
+	TgChatId int64
+	User     User `gorm:"foreignKey:UserId"`
+}

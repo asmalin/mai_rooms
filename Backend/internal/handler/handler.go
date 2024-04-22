@@ -33,16 +33,22 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	})
 
 	router.POST("/login", h.Login)
-
 	router.GET("/checkAuth", h.userIdentity, h.checkAuth)
+
+	router.POST("/tg_login", h.TgLogin)
 
 	api := router.Group("/api", h.userIdentity)
 	{
 		api.POST("/reserve", h.Reserve)
 		api.POST("/cancelReservation", h.CancelReservation)
-		api.GET("/reservedRooms", h.GetReservedRooms)
 		api.GET("/qrcodes", h.GetQRCodes)
 
+	}
+
+	tg := router.Group("/tg")
+	{
+		tg.POST("/reserve", h.TgReserve)
+		tg.POST("/cancelReservation", h.CancelReservation)
 	}
 
 	api = router.Group("/api")

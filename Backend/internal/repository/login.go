@@ -39,3 +39,27 @@ func (l *LoginPostgres) GetUserById(id int) (models.User, error) {
 	}
 	return user, nil
 }
+
+func (l *LoginPostgres) AddUserTgChatRelation(userId int, tgChatId int64) error {
+
+	l.db.AutoMigrate(&models.UserTgChatRelation{})
+
+	user, _ := l.GetUserById(userId)
+	userTgChatRekation := models.UserTgChatRelation{UserId: userId, TgChatId: tgChatId, User: user}
+
+	result := l.db.Create(&userTgChatRekation)
+
+	if result.Error != nil {
+		return fmt.Errorf("insert relation error")
+	}
+	return nil
+}
+
+func (l *LoginPostgres) GetUserChatRelation(tgChatId int64) (models.UserTgChatRelation, error) {
+	var userTgChatRelation models.UserTgChatRelation
+	result := l.db.Where("tg_chat_id = ?", tgChatId).Take(&userTgChatRelation)
+	if result.Error != nil {
+		return models.UserTgChatRelation{}, fmt.Errorf("user not found")
+	}
+	return userTgChatRelation, nil
+}

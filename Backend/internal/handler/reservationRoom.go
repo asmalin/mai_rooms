@@ -11,12 +11,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type lessonForReservationJSON struct {
+type lessonForReservationJSON_WEB struct {
 	RoomId    string `json:"roomId"`
 	Date      string `json:"date"`
 	StartTime string `json:"startTime"`
 	EndTime   string `json:"endTime"`
 	Comment   string `json:"comment"`
+}
+
+type lessonForReservationJSON_TG struct {
+	ChatId    string `json:"userId"`
+	RoomId    string `json:"roomId"`
+	Date      string `json:"date"`
+	StartTime string `json:"startTime"`
+	EndTime   string `json:"endTime"`
 }
 
 type lessonForCancelReservationJSON struct {
@@ -27,10 +35,9 @@ type lessonForCancelReservationJSON struct {
 
 func (h *Handler) Reserve(c *gin.Context) {
 
-	var lessonForReservation lessonForReservationJSON
+	var lessonForReservation lessonForReservationJSON_WEB
 	if err := json.NewDecoder(c.Request.Body).Decode(&lessonForReservation); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err)
-
 		return
 	}
 
@@ -51,14 +58,46 @@ func (h *Handler) Reserve(c *gin.Context) {
 
 	h.services.Reservation.ReserveRoom(reservedRoom)
 
-	c.JSON(http.StatusOK, "reserved!")
+	c.JSON(http.StatusOK, "")
+}
+
+func (h *Handler) TgReserve(c *gin.Context) {
+
+	var lessonForReservation lessonForReservationJSON_TG
+	if err := json.NewDecoder(c.Request.Body).Decode(&lessonForReservation); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, err)
+		return
+	}
+
+	chatId, _ := strconv.ParseInt(lessonForReservation.ChatId, 10, 64)
+	userId, _ := h.services.Login.UserIdByChatId(chatId)
+	roomId, _ := strconv.Atoi(lessonForReservation.RoomId)
+	date := lessonForReservation.Date
+	parsedDate, dateErr := time.Parse("02.01.2006", date)
+	startTime := lessonForReservation.StartTime
+	endTime := lessonForReservation.EndTime
+	comment := ""
+
+	if userId == 0 || roomId == 0 || dateErr != nil {
+		c.JSON(http.StatusBadRequest, "Invalid request")
+	}
+
+	reservedRoom := models.ReservedLesson{User_id: userId, Room_id: roomId, Date: parsedDate, TimeStart: startTime, TimeEnd: endTime, Comment: comment}
+
+	err := h.services.Reservation.ReserveRoom(reservedRoom)
+
+	if err != nil {
+		c.JSON(http.StatusServiceUnavailable, "service problem")
+		return
+	}
+
+	c.JSON(http.StatusOK, "")
 }
 
 func (h *Handler) CancelReservation(c *gin.Context) {
 	var lessonForCancelReservation lessonForCancelReservationJSON
 	if err := json.NewDecoder(c.Request.Body).Decode(&lessonForCancelReservation); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err)
-
 		return
 	}
 
@@ -78,8 +117,4 @@ func (h *Handler) CancelReservation(c *gin.Context) {
 	h.services.Reservation.CancelReservation(lesson)
 
 	c.JSON(http.StatusOK, "canceled!")
-}
-
-func (h *Handler) GetReservedRooms(c *gin.Context) {
-	// Ваш код обработки запроса для /api/reservedRooms
 }
