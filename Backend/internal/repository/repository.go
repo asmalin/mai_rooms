@@ -10,6 +10,7 @@ import (
 type Login interface {
 	GetUser(username, password string) (models.User, error)
 	GetUserById(id int) (models.User, error)
+
 	AddUserTgChatRelation(userId int, tgChatId int64) error
 	GetUserChatRelation(tgChatId int64) (models.UserTgChatRelation, error)
 }
@@ -19,6 +20,7 @@ type Reservation interface {
 	CancelReservation(reservedLesson_id int) error
 	GetReservedLesson(roomId int, date string, startTime string) (models.ReservedLesson, error)
 	GetReservedLessons(roomId int, date string) ([]models.ReservedLesson, error)
+	GetAllReservedLessons() ([]models.ReservedLesson, error)
 }
 
 type QRCode interface {

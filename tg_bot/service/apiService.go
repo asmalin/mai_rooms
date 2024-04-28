@@ -8,14 +8,23 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"time"
 
 	"tg_bot/models"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 type LoginInput struct {
 	Username string
 	Password string
 	ChatId   int64
+}
+
+type tokenClaims struct {
+	jwt.StandardClaims
+	UserId   int   `json:"user_id"`
+	TgChatId int64 `json:"tgChat_id"`
 }
 
 func Buildings() []models.Building {
@@ -97,12 +106,32 @@ func Auth(username string, password string, chatId int64) (err error) {
 	return nil
 }
 
-func Reserve(lesson models.LessonForReservationJSON) error {
+func Reserve(chatId int64, lesson models.LessonForReservationJSON) error {
 
 	jsonData, _ := json.Marshal(lesson)
 	requestBody := bytes.NewBuffer(jsonData)
 
-	resp, err := http.Post("http://localhost:8080/tg/reserve", "application/json", requestBody)
+	client := &http.Client{}
+
+	req, err := http.NewRequest("POST", "http://localhost:8080/api/reserve", requestBody)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
+		jwt.StandardClaims{
+			IssuedAt: time.Now().Unix(),
+		},
+		0,
+		chatId,
+	})
+
+	tokenStr, _ := token.SignedString([]byte("key115824"))
+
+	req.Header.Set("Authorization", "Bearer "+tokenStr)
+
+	resp, err := client.Do(req)
+
 	if err != nil {
 		log.Fatal(err)
 	}

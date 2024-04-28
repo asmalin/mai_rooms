@@ -20,7 +20,8 @@ func NewLoginService(repo repository.Login) *LoginService {
 
 type tokenClaims struct {
 	jwt.StandardClaims
-	UserId int `json:"user_id"`
+	UserId   int   `json:"user_id"`
+	TgChatId int64 `json:"tgChat_id"`
 }
 
 func (s *LoginService) TgLogin(username, password string, tgChatId int64) (err error) {
@@ -64,6 +65,7 @@ func (s *LoginService) GenerateToken(username, password string) (string, error) 
 			IssuedAt:  time.Now().Unix(),
 		},
 		user.Id,
+		0,
 	})
 
 	return token.SignedString([]byte(os.Getenv("Secret_key")))
@@ -87,7 +89,19 @@ func (s *LoginService) ParseToken(accessToken string) (int, error) {
 		return 0, errors.New("token claims are not of type *tokenClaims")
 	}
 
-	return claims.UserId, nil
+	if claims.UserId != 0 {
+		return claims.UserId, nil
+	}
+
+	if claims.TgChatId != 0 {
+		userTgChatRelation, err := s.repo.GetUserChatRelation(claims.TgChatId)
+		if err != nil {
+			return 0, err
+		}
+		return userTgChatRelation.UserId, nil
+	}
+
+	return 0, errors.New("неизвестная ошибка")
 }
 
 func (s *LoginService) GetUserById(id int) (models.User, error) {

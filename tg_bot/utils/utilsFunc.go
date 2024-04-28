@@ -44,6 +44,7 @@ func CreateButtonsForRoom(roomId, date, buildingIdStr string) (keyboard *telego.
 	}
 
 	for _, lesson := range reserved {
+
 		buttonsData[lessons_timeStart[lesson.StartTime]-1] = ButtonData{
 			ButtonName:   fmt.Sprint(lessons_timeStart[lesson.StartTime]) + ". " + lesson.StartTime + " - " + lesson.EndTime + " Забронировано 🔶",
 			CallBackData: "lesson" + "|" + roomId + "|" + lesson.StartTime + "|" + lesson.EndTime + "|" + date}

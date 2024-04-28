@@ -19,6 +19,7 @@ type Reservation interface {
 	ReserveRoom(reservedRoom models.ReservedLesson) error
 	CancelReservation(lessonForCancelReservation dto.LessonForCancelReservationDto) error
 	GetReservationRoom(roomId int, date string) ([]models.ReservedLesson, error)
+	GetAllReservedLessons() ([]models.ReservedLesson, error)
 }
 
 type QRCode interface {

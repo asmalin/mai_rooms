@@ -1,7 +1,7 @@
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import "../styles/Header.css";
 
-export default function Header({ isLoggedIn, setIsLoggedIn, userFullName }) {
+export default function Header({ isLoggedIn, setIsLoggedIn, user }) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -34,10 +34,35 @@ export default function Header({ isLoggedIn, setIsLoggedIn, userFullName }) {
               Инфо
             </NavLink>
           </li>
+          {user?.role === "admin" && (
+            <>
+              <li className="navbar__item">
+                <NavLink
+                  to="/reservation_management"
+                  className="navbar__link"
+                  activeclassname="active"
+                >
+                  Бронирование
+                </NavLink>
+              </li>
+              <li className="navbar__item">
+                <NavLink
+                  to="/qrcode"
+                  className="navbar__link"
+                  activeclassname="active"
+                >
+                  QRcodes
+                </NavLink>
+              </li>
+            </>
+          )}
         </ul>
         {isLoggedIn ? (
           <div className="navbar__auth">
-            <div className="user">{userFullName}</div>
+            <Link to="/profile">
+              <div className="user">{user?.fullname}</div>
+            </Link>
+
             <button className="logout-btn" onClick={logout}>
               Выйти
             </button>

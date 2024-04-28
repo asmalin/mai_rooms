@@ -194,8 +194,7 @@ func main() {
 		timeStart := queryData[3]
 		timeEnd := queryData[4]
 
-		err = service.Reserve(models.LessonForReservationJSON{
-			ChatId:    fmt.Sprint(chatId.ID),
+		err = service.Reserve(query.Message.GetChat().ID, models.LessonForReservationJSON{
 			RoomId:    roomId,
 			Date:      date,
 			StartTime: timeStart,
@@ -206,7 +205,7 @@ func main() {
 			fmt.Println(err)
 			bot.SendMessage(tu.Message(
 				chatId,
-				"Для аутентификации требуется ввести логин и пароль в следующем формате:\n/auth <логин> <пароль>",
+				"Для бронирования аудитории нужно авторизоваться.\nДля этого необходимо ввести логин и пароль в следующем формате:\n/auth <логин> <пароль>",
 			))
 			return
 		}
@@ -240,9 +239,16 @@ func main() {
 		} else {
 			err := service.Auth(query[1], query[2], message.Chat.ID)
 			if err != nil {
-				fmt.Println(err)
+				bot.SendMessage(tu.Message(
+					message.Chat.ChatID(),
+					"Неправильный логин или пароль!",
+				))
 				return
 			}
+			bot.SendMessage(tu.Message(
+				message.Chat.ChatID(),
+				"Авторизация прошла успешно!",
+			))
 		}
 
 	}, th.CommandEqual("auth"))

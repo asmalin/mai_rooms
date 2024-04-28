@@ -45,12 +45,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	}
 
-	tg := router.Group("/tg")
-	{
-		tg.POST("/reserve", h.TgReserve)
-		tg.POST("/cancelReservation", h.CancelReservation)
-	}
-
 	api = router.Group("/api")
 	{
 		api.GET("/buildings", h.GetAllBuildings)
@@ -58,6 +52,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		api.GET("/room/:roomId", h.GetRoomNameById)
 		api.GET("/schedule", h.GetScheduleByRoomAndDate)
 		api.GET("/reserved_lesssons", h.GetReservedLessonsByRoomAndDate)
+		api.GET("/all_reserved_lesssons", h.GetAllReservedLessons)
 	}
 	return router
 }

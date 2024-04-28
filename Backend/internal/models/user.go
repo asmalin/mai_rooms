@@ -11,6 +11,7 @@ type User struct {
 	Password string `json:"password" binding:"required" gorm:"size:255"`
 	Fullname string `json:"fullname" binding:"required" gorm:"size:255"`
 	Role     string `json:"role" binding:"required" gorm:"size:50"`
+	Email    string `json:"email" gorm:"size:255"`
 }
 
 type UserTgChatRelation struct {

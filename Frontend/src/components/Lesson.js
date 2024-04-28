@@ -5,7 +5,7 @@ import "../styles/Lesson.css";
 import checkAuth from "../services/authService.js";
 import { reserveRoom, cancelReserve } from "../services/ReservationService.js";
 
-export default function Lesson({ fetchReservedRooms, user_id, ...props }) {
+export default function Lesson({ fetchReservedRooms, user, ...props }) {
   const [comment, setComment] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
@@ -93,19 +93,19 @@ export default function Lesson({ fetchReservedRooms, user_id, ...props }) {
           </li>
         </ul>
 
-        {props.lesson.reserver_id === user_id && (
-          <button
-            className="cancelReserve-btn"
-            onClick={cancelReservationHandler}
-          >
-            Отменить
-          </button>
-        )}
+        {user &&
+          (props.lesson.reserver_id === user.id || user.role === "admin") && (
+            <button
+              className="cancelReserve-btn"
+              onClick={cancelReservationHandler}
+            >
+              Отменить
+            </button>
+          )}
       </CollapsablePanel>
     );
   } else {
     const { lector, subject, groups, type } = props.lesson;
-    //panelTitle ;
 
     return (
       <CollapsablePanel

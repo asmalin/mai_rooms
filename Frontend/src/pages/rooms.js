@@ -3,12 +3,15 @@ import { useLocation } from "react-router-dom";
 import Room from "../components/Room.js";
 import "../styles/Rooms.css";
 
-export default function Rooms({ user_id }) {
+export default function Rooms({ user }) {
   const [showOnlyFree, setShowOnlyFree] = useState(false);
 
   const searchParams = new URLSearchParams(useLocation().search);
   const roomIds = searchParams.getAll("roomId");
-  const date = new Date(searchParams.get("date")).toLocaleDateString("ru");
+  const dateFromUrl = searchParams.get("date");
+
+  const date =
+    dateFromUrl != null ? new Date(dateFromUrl).toLocaleDateString("ru") : null;
 
   if (roomIds.length === 0) return <div>Не выбрана аудитория!</div>;
 
@@ -17,7 +20,7 @@ export default function Rooms({ user_id }) {
   return (
     <>
       <div className="settingChanges">
-        <div>{date}</div>
+        <div>{date || getCurrentDate()}</div>
         <div>
           <input
             type="checkbox"
@@ -32,13 +35,21 @@ export default function Rooms({ user_id }) {
       {roomIds.map((id) => (
         <div key={id} className="room">
           <Room
-            roomId={id}
+            roomId={Number(id)}
             date={date}
             showOnlyFree={showOnlyFree}
-            user_id={user_id}
+            user={user}
           />
         </div>
       ))}
     </>
   );
+}
+
+function getCurrentDate() {
+  const date = new Date();
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}.${month}.${year}`;
 }

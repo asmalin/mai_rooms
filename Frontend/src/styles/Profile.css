@@ -1,0 +1,50 @@
+
+
+.profile_data h1 {
+    margin-top: 0;
+}
+
+.profile_ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.profile_ul li {
+    margin-bottom: 10px;
+}
+
+.profile_field {
+    width: 100%;
+}
+  
+
+.profile_ul li input{
+    margin-left: 10px;
+}
+
+.profile_ul li span{
+    width: 55px 
+}
+
+.btn{
+    width: auto;
+    padding: 5px 10px !important;
+}
+
+.filter_form{
+    display: flex;
+}
+
+.filter_form input:not(:last-child) {
+    margin-right: 5px;
+}
+
+.filter_form .date_input{
+    width: 300px;
+    height: 42px;
+    font-size: large;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding-left: 10px;
+
+}

@@ -102,3 +102,31 @@ func ParseDate(date string) (string, error) {
 	}
 	return date, nil
 }
+
+func (h *Handler) GetAllReservedLessons(c *gin.Context) {
+	lessons, err := h.services.Reservation.GetAllReservedLessons()
+	if err != nil {
+		c.JSON(http.StatusServiceUnavailable, err)
+		return
+	}
+
+	var reservedLessonsDTO []dto.ReservedLessonDto
+	for _, lesson := range lessons {
+		dateStr := lesson.Date.Format("02.01.2006")
+		startTime := lesson.TimeStart[:5]
+		endTime := lesson.TimeEnd[:5]
+		comment := lesson.Comment
+
+		reservedLessonsDTO = append(reservedLessonsDTO, dto.ReservedLessonDto{
+			ReserverName: lesson.User.Fullname,
+			ReserverId:   lesson.User_id,
+			RoomName:     lesson.Room.Name,
+			RoomId:       lesson.Room.ID,
+			Date:         dateStr,
+			StartTime:    startTime,
+			EndTime:      endTime,
+			Comment:      comment})
+	}
+
+	c.JSON(http.StatusOK, reservedLessonsDTO)
+}

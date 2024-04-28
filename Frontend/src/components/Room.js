@@ -7,7 +7,7 @@ import {
   lessonTimeEnd,
 } from "../services/lessonsService.js";
 
-export default function Room({ roomId, date, showOnlyFree, user_id }) {
+export default function Room({ roomId, date, showOnlyFree, user }) {
   const [lessons, setLessons] = useState([]);
   const [roomName, setRoomName] = useState("");
 
@@ -57,7 +57,7 @@ export default function Room({ roomId, date, showOnlyFree, user_id }) {
                 timeEnd={lessonTimeEnd[lessonNumber]}
                 lesson={lesson}
                 fetchReservedRooms={fetchReservedRooms}
-                user_id={user_id}
+                user={user}
               />
             </div>
           );

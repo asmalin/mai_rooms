@@ -1,6 +1,9 @@
 package dto
 
-import "time"
+import (
+	"classrooms/internal/models"
+	"time"
+)
 
 type RoomDto struct {
 	Id   int    `json:"id"`
@@ -19,6 +22,8 @@ type ScheduleLessonDto struct {
 type ReservedLessonDto struct {
 	ReserverName string `json:"reserver"`
 	ReserverId   int    `json:"reserver_id"`
+	RoomName     string `json:"room_name"`
+	RoomId       int    `json:"room_id"`
 	Date         string `json:"date"`
 	StartTime    string `json:"time_start"`
 	EndTime      string `json:"time_end"`
@@ -26,8 +31,8 @@ type ReservedLessonDto struct {
 }
 
 type LessonForCancelReservationDto struct {
-	ReserverId int       `json:"reserver_id"`
-	Room_id    int       `json:"room_id"`
-	Date       time.Time `json:"date"`
-	StartTime  string    `json:"time_start"`
+	User      models.User `json:"user"`
+	Room_id   int         `json:"room_id"`
+	Date      time.Time   `json:"date"`
+	StartTime string      `json:"time_start"`
 }

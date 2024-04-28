@@ -35,7 +35,19 @@ func (r *ReservationPostgres) CancelReservation(reservedLesson_id int) error {
 	return nil
 }
 
+func (r *ReservationPostgres) GetAllReservedLessons() ([]models.ReservedLesson, error) {
+
+	var reservedLessons []models.ReservedLesson
+	result := r.db.Preload("User").Preload("Room").Find(&reservedLessons)
+	if result.Error != nil {
+		return nil, errors.New("ошибка при получении данных")
+	}
+
+	return reservedLessons, nil
+}
+
 func (r *ReservationPostgres) GetReservedLessons(roomId int, date string) ([]models.ReservedLesson, error) {
+
 	var reservedLessons []models.ReservedLesson
 	result := r.db.Where("room_id = ? AND date = ?", roomId, date).Find(&reservedLessons)
 	if result.Error != nil {
