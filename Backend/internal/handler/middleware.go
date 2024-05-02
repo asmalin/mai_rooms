@@ -8,6 +8,7 @@ import (
 )
 
 func (h *Handler) userIdentity(c *gin.Context) {
+
 	header := c.GetHeader("Authorization")
 
 	if header == "" {
@@ -27,6 +28,7 @@ func (h *Handler) userIdentity(c *gin.Context) {
 	}
 
 	userId, err := h.services.Login.ParseToken(headerParts[1])
+
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return

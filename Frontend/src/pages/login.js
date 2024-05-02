@@ -5,7 +5,7 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8080";
 
-const Login = ({ setIsLoggedIn }) => {
+const Login = ({ setUser }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginErrorMsg, setLoginErrorMsg] = useState("");
@@ -22,22 +22,27 @@ const Login = ({ setIsLoggedIn }) => {
     e.preventDefault();
 
     await axios
-      .post(`${API_URL}/login`, {
-        username,
-        password,
-      })
+      .post(
+        `${API_URL}/login`,
+        {
+          username,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      )
       .then((response) => {
         setLoginErrorMsg("");
 
         if (response.data.token) {
           localStorage.setItem("token", JSON.stringify(response.data.token));
-          setIsLoggedIn(true);
+          setUser(response.data.user);
           if (fromPage) navigate(fromPage);
           else navigate("/");
         }
       })
       .catch((error) => {
-        console.log(error);
         setLoginErrorMsg("Неправильный имя пользователя или пароль!");
       });
   };

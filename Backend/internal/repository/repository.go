@@ -40,12 +40,20 @@ type Lesson interface {
 	DeleteAll() error
 }
 
+type Users interface {
+	GetAllUsers() ([]models.User, error)
+	CreateUser(user models.User) error
+	DeleteUser(userId int) error
+	UpdateUser(user models.User) error
+}
+
 type Repository struct {
 	Login
 	Reservation
 	QRCode
 	Room
 	Lesson
+	Users
 }
 
 func NewRepository(db *gorm.DB) *Repository {
@@ -55,5 +63,6 @@ func NewRepository(db *gorm.DB) *Repository {
 		QRCode:      nil,
 		Room:        NewRoomPostgres(db),
 		Lesson:      NewLessonPostgres(db),
+		Users:       NewUsersPostgres(db),
 	}
 }

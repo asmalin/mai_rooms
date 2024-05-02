@@ -18,7 +18,7 @@ export default function Rooms({ user }) {
   if (date === "Invalid Date") return <div>Неверный формат даты!</div>;
 
   return (
-    <>
+    <div className="wrapper">
       <div className="settingChanges">
         <div>{date || getCurrentDate()}</div>
         <div>
@@ -42,7 +42,7 @@ export default function Rooms({ user }) {
           />
         </div>
       ))}
-    </>
+    </div>
   );
 }
 

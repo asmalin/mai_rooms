@@ -2,7 +2,7 @@ import React from "react";
 
 function Info() {
   return (
-    <>
+    <div className="wrapper">
       <div>
         Здесь можно посмотреть расписание занятий на аудиторию, а также
         забронировать свободную.
@@ -19,7 +19,7 @@ function Info() {
         </a>{" "}
         версия приложения.
       </div>
-    </>
+    </div>
   );
 }
 

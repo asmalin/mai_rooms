@@ -1,0 +1,26 @@
+.users_mgmt{
+    width: 100%;
+    margin: 30px 5%;
+}
+
+.users_mgmt > form > input{
+    margin: 10px 0;
+}
+
+.users_mgmt > form > button{
+    margin: 10px 0;
+}
+
+.filter_form input, select{
+    height: 42px;
+    
+}
+
+.table_td_buttons{
+    display: flex;
+    justify-content: space-around;
+}
+
+table .table_cell_editMode{
+    width: 100%;
+}

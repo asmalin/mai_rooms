@@ -22,7 +22,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, DELETE, PATCH")
 
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(http.StatusOK)
@@ -33,7 +33,9 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	})
 
 	router.POST("/login", h.Login)
-	router.GET("/checkAuth", h.userIdentity, h.checkAuth)
+	router.GET("/logout", h.Logout)
+	router.GET("/auth/refresh", h.AuthRefresh)
+	router.GET("/auth/check", h.userIdentity, h.checkAuth)
 
 	router.POST("/tg_login", h.TgLogin)
 
@@ -42,6 +44,11 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		api.POST("/reserve", h.Reserve)
 		api.POST("/cancelReservation", h.CancelReservation)
 		api.GET("/qrcodes", h.GetQRCodes)
+		api.GET("/users", h.GetAllUsers)
+		api.DELETE("/users/delete/:userId", h.DeleteUserById)
+		api.POST("/users/create", h.CreateUser)
+		api.PATCH("/users/update/:userId", h.UpdateUser)
+		api.PATCH("/users/update/password", h.ChangeUserPassword)
 
 	}
 

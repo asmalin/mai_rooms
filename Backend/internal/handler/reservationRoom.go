@@ -28,7 +28,7 @@ func (h *Handler) Reserve(c *gin.Context) {
 
 	var lessonForReservation lessonForReservationJSON
 	if err := json.NewDecoder(c.Request.Body).Decode(&lessonForReservation); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, "json decoding error")
 		return
 	}
 

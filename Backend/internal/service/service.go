@@ -7,10 +7,13 @@ import (
 )
 
 type Login interface {
-	TgLogin(username, password string, tgChatId int64) (err error)
+	WebAuth(username, password string) (models.User, error)
+	TgAuth(username, password string, tgChatId int64) (err error)
 	UserIdByChatId(tgChatId int64) (userId int, err error)
 
-	GenerateToken(username, password string) (string, error)
+	GenerateAccessToken(models.User) (string, error)
+	GenerateRefreshToken(userId int) (string, error)
+
 	ParseToken(token string) (int, error)
 	GetUserById(id int) (models.User, error)
 }
@@ -38,12 +41,21 @@ type Schedule interface {
 	RefreshLectorSchedule() error
 }
 
+type Users interface {
+	GetAllUsers() ([]dto.UserDto, error)
+	CreateUser(models.User) error
+	DeleteUser(userId int) error
+	UpdateUser(user models.User) error
+	ChangePassword(oldPassword, newPassword string, user models.User) error
+}
+
 type Service struct {
 	Login
 	Reservation
 	QRCode
 	Room
 	Schedule
+	Users
 }
 
 func NewService(repo *repository.Repository) *Service {
@@ -53,5 +65,6 @@ func NewService(repo *repository.Repository) *Service {
 		QRCode:      nil,
 		Room:        NewRoomService(repo.Room),
 		Schedule:    NewScheduleService(repo.Room, repo.Lesson),
+		Users:       NewUsersService(repo.Users),
 	}
 }

@@ -1,8 +1,21 @@
+.profile {
+    display: flex;
+    flex: 1 1 auto
+  }
+  
+  .admin_panel {
+    
+    background-color: #e9eaff;
+    padding: 20px;
+
+  }
+  
+  .profile_info {
+    padding: 10px 60px 50px 60px;
+    width: 100%;
+  }
 
 
-.profile_data h1 {
-    margin-top: 0;
-}
 
 .profile_ul {
     list-style-type: none;
@@ -11,6 +24,8 @@
 
 .profile_ul li {
     margin-bottom: 10px;
+    display: flex;
+    align-items: baseline;
 }
 
 .profile_field {
@@ -47,4 +62,8 @@
     border-radius: 4px;
     padding-left: 10px;
 
+}
+
+.successMsg{
+    color: green;
 }

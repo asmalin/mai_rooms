@@ -1,12 +1,13 @@
 import React from "react";
-import "../styles/home.css";
+import "../styles/qrcode.css";
+import AdminNav from "../components/AdminNav";
 
 import { CreateQRCodes } from "../services/ReservationService";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function QRcodesGenerator() {
+export default function QRcodesGenerator({ user }) {
   const [buildingsList, setBuildingsList] = useState([]);
   const [selectedBuilding, setSelectedBuilding] = useState();
   const [roomsList, setRoomsList] = useState([]);
@@ -48,56 +49,59 @@ export default function QRcodesGenerator() {
   const createQRcodes = (event) => {
     event.preventDefault();
 
-    CreateQRCodes(selectedRooms).then((res) => console.log(res));
+    CreateQRCodes(selectedRooms);
   };
 
   return (
-    <div className="wrapper">
-      <h2>Создать QRCode выбранной аудитории для быстрого доступа к ней</h2>
-      <div className="select-building">
-        <h2>Выберете корпус</h2>
-        <select
-          className="form-select"
-          onChange={(e) => setSelectedBuilding(e.target.value)}
-          value={selectedBuilding}
-        >
-          <option>--Выберете корпус--</option>
-          {buildingsList.map((building) => (
-            <option key={building.id} value={building.id}>
-              {building.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {roomsList.length > 0 && (
-        <form onSubmit={createQRcodes} className="roomSelectForm">
-          <div className="roomsList form-check">
-            {roomsList.map((room) => (
-              <div className="btn-room" key={room.id}>
-                <input
-                  id={room.id}
-                  type="checkbox"
-                  name="roomId"
-                  value={room.id}
-                  onChange={roomChange}
-                />
-                <label className="form-check-label" htmlFor={room.id}>
-                  {room.name}
-                </label>
-              </div>
+    <>
+      <AdminNav />
+      <div className="qrcode_generator">
+        <h2>Создать QRCode для выбранной аудиториий</h2>
+        <div className="select-building">
+          <h2>Выберете корпус</h2>
+          <select
+            className="form-select"
+            onChange={(e) => setSelectedBuilding(e.target.value)}
+            value={selectedBuilding}
+          >
+            <option>--Выберете корпус--</option>
+            {buildingsList.map((building) => (
+              <option key={building.id} value={building.id}>
+                {building.name}
+              </option>
             ))}
-          </div>
-          {error && (
-            <div className="emptySelectedRoomsError">
-              Выберете хотя бы одну аудиторию
+          </select>
+        </div>
+
+        {roomsList.length > 0 && (
+          <form onSubmit={createQRcodes} className="roomSelectForm">
+            <div className="roomsList form-check">
+              {roomsList.map((room) => (
+                <div className="btn-room" key={room.id}>
+                  <input
+                    id={room.id}
+                    type="checkbox"
+                    name="roomId"
+                    value={room.id}
+                    onChange={roomChange}
+                  />
+                  <label className="form-check-label" htmlFor={room.id}>
+                    {room.name}
+                  </label>
+                </div>
+              ))}
             </div>
-          )}
-          <button type="submit" className="selectRoomButton">
-            Создать
-          </button>
-        </form>
-      )}
-    </div>
+            {error && (
+              <div className="emptySelectedRoomsError">
+                Выберете хотя бы одну аудиторию
+              </div>
+            )}
+            <button type="submit" className="selectRoomButton">
+              Скачать
+            </button>
+          </form>
+        )}
+      </div>
+    </>
   );
 }

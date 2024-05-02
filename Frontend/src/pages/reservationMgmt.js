@@ -1,6 +1,8 @@
 import { cancelReserve } from "../services/ReservationService.js";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import AdminNav from "../components/AdminNav.js";
+import "../styles/ReservationMgmt.css";
 
 export default function ReservationMgmt({ user }) {
   const [reservedLessons, setReservedLessons] = useState();
@@ -50,7 +52,8 @@ export default function ReservationMgmt({ user }) {
   }
   return (
     <>
-      <div>
+      <AdminNav />
+      <div className="reservation_mgmt ">
         <strong>Все заронированные аудитории</strong>
 
         <div>

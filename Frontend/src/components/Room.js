@@ -15,11 +15,12 @@ export default function Room({ roomId, date, showOnlyFree, user }) {
   const [reservedLessons, setReservedLessons] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/room/${roomId}`)
+    const server_domain = process.env.REACT_APP_SERVER_BASE_URL;
+    fetch(server_domain + `/api/room/${roomId}`)
       .then((response) => response.json())
       .then((data) => setRoomName(data));
 
-    fetch(`http://localhost:8080/api/schedule?date=${date}&room=${roomId}`)
+    fetch(server_domain + `/api/schedule?date=${date}&room=${roomId}`)
       .then((response) => response.json())
       .then((lessons) => setScheduleLessons(getLessonNumber(lessons)));
 
@@ -27,9 +28,8 @@ export default function Room({ roomId, date, showOnlyFree, user }) {
   }, [date, roomId]);
 
   function fetchReservedRooms() {
-    fetch(
-      `http://localhost:8080/api/reserved_lesssons?date=${date}&room=${roomId}`
-    )
+    const server_domain = process.env.REACT_APP_SERVER_BASE_URL;
+    fetch(server_domain + `/api/reserved_lesssons?date=${date}&room=${roomId}`)
       .then((response) => response.json())
       .then((lessons) => setReservedLessons(getLessonNumber(lessons)));
   }

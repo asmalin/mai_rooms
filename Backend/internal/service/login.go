@@ -24,7 +24,15 @@ type tokenClaims struct {
 	TgChatId int64 `json:"tgChat_id"`
 }
 
-func (s *LoginService) TgLogin(username, password string, tgChatId int64) (err error) {
+func (s *LoginService) WebAuth(username, password string) (models.User, error) {
+	user, err := s.repo.GetUser(username, password)
+	if err != nil {
+		return models.User{}, err
+	}
+	return user, nil
+}
+
+func (s *LoginService) TgAuth(username, password string, tgChatId int64) (err error) {
 	user, err := s.repo.GetUser(username, password)
 	if err != nil {
 		return err
@@ -50,12 +58,7 @@ func (s *LoginService) UserIdByChatId(tgChatId int64) (userId int, err error) {
 	return userChatRelation.UserId, nil
 }
 
-func (s *LoginService) GenerateToken(username, password string) (string, error) {
-
-	user, err := s.repo.GetUser(username, password)
-	if err != nil {
-		return "", err
-	}
+func (s *LoginService) GenerateAccessToken(user models.User) (string, error) {
 
 	expirationTime := time.Now().Add(30 * time.Minute)
 
@@ -65,6 +68,22 @@ func (s *LoginService) GenerateToken(username, password string) (string, error) 
 			IssuedAt:  time.Now().Unix(),
 		},
 		user.Id,
+		0,
+	})
+
+	return token.SignedString([]byte(os.Getenv("Secret_key")))
+}
+
+func (s *LoginService) GenerateRefreshToken(userId int) (string, error) {
+
+	expirationTime := time.Now().Add(24 * time.Hour * 60)
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
+		jwt.StandardClaims{
+			ExpiresAt: expirationTime.Unix(),
+			IssuedAt:  time.Now().Unix(),
+		},
+		userId,
 		0,
 	})
 

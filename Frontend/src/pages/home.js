@@ -24,8 +24,9 @@ function Home() {
   };
 
   useEffect(() => {
+    const server_domain = process.env.REACT_APP_SERVER_BASE_URL;
     axios
-      .get("http://localhost:8080/api/buildings")
+      .get(server_domain + "/api/buildings")
       .then((response) => {
         setBuildingsList(response.data);
       })
@@ -36,7 +37,8 @@ function Home() {
 
   useEffect(() => {
     if (selectedBuilding) {
-      const apiUrl = "http://localhost:8080/api/rooms/" + selectedBuilding;
+      const server_domain = process.env.REACT_APP_SERVER_BASE_URL;
+      const apiUrl = server_domain + "/api/rooms/" + selectedBuilding;
       fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => setRoomsList(data));
@@ -116,9 +118,7 @@ function Home() {
             ))}
           </div>
           {error && (
-            <div className="emptySelectedRoomsError">
-              Выберете хотя бы одну аудиторию
-            </div>
+            <div className="errorMsg">Выберете хотя бы одну аудиторию</div>
           )}
           <button type="submit" className="selectRoomButton">
             Перейти

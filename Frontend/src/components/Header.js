@@ -1,19 +1,22 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import "../styles/Header.css";
 
-export default function Header({ isLoggedIn, setIsLoggedIn, user }) {
+import { logout } from "../services/authService";
+
+export default function Header({ user, setUser }) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const login = () => {
+  const loginHandler = () => {
     navigate("/login", {
       state: { from: location.pathname + location.search },
     });
   };
 
-  const logout = () => {
+  const logoutHandler = () => {
     localStorage.removeItem("token");
-    setIsLoggedIn(false);
+    logout();
+    setUser(null);
   };
 
   return (
@@ -34,43 +37,21 @@ export default function Header({ isLoggedIn, setIsLoggedIn, user }) {
               Инфо
             </NavLink>
           </li>
-          {user?.role === "admin" && (
-            <>
-              <li className="navbar__item">
-                <NavLink
-                  to="/reservation_management"
-                  className="navbar__link"
-                  activeclassname="active"
-                >
-                  Бронирование
-                </NavLink>
-              </li>
-              <li className="navbar__item">
-                <NavLink
-                  to="/qrcode"
-                  className="navbar__link"
-                  activeclassname="active"
-                >
-                  QRcodes
-                </NavLink>
-              </li>
-            </>
-          )}
         </ul>
-        {isLoggedIn ? (
+        {user ? (
           <div className="navbar__auth">
             <Link to="/profile">
-              <div className="user">{user?.fullname}</div>
+              <div className="user">{user?.username}</div>
             </Link>
 
-            <button className="logout-btn" onClick={logout}>
+            <button className="logout-btn" onClick={logoutHandler}>
               Выйти
             </button>
           </div>
         ) : (
           location.pathname !== "/login" && (
             <div className="navbar__auth">
-              <button className="login-btn" onClick={login}>
+              <button className="login-btn" onClick={loginHandler}>
                 Войти
               </button>
             </div>
