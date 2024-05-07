@@ -16,6 +16,7 @@ func NewHandler(services *service.Service) *Handler {
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
+
 	router := gin.Default()
 
 	router.Use(func(c *gin.Context) {
@@ -32,14 +33,27 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		c.Next()
 	})
 
-	router.POST("/login", h.Login)
-	router.GET("/logout", h.Logout)
-	router.GET("/auth/refresh", h.AuthRefresh)
-	router.GET("/auth/check", h.userIdentity, h.checkAuth)
+	api := router.Group("/api")
+	{
+		api.GET("/buildings", h.GetAllBuildings)
+		api.GET("/rooms/:buildingId", h.GetRoomsByBuilding)
+		api.GET("/room/:roomId", h.GetRoomNameById)
+		api.GET("/schedule", h.GetScheduleByRoomAndDate)
+		api.GET("/reserved_lesssons", h.GetReservedLessonsByRoomAndDate)
+		api.GET("/all_reserved_lesssons", h.GetAllReservedLessons)
 
-	router.POST("/tg_login", h.TgLogin)
+		auth := api.Group("/auth")
+		{
+			auth.POST("/login", h.Login)
+			auth.GET("/logout", h.Logout)
+			auth.GET("/auth/refresh", h.AuthRefresh)
+			auth.GET("/auth/check", h.userIdentity, h.checkAuth)
 
-	api := router.Group("/api", h.userIdentity)
+			auth.POST("/tg_login", h.TgLogin)
+		}
+	}
+
+	api = router.Group("/api", h.userIdentity)
 	{
 		api.POST("/reserve", h.Reserve)
 		api.POST("/cancelReservation", h.CancelReservation)
@@ -52,14 +66,5 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	}
 
-	api = router.Group("/api")
-	{
-		api.GET("/buildings", h.GetAllBuildings)
-		api.GET("/rooms/:buildingId", h.GetRoomsByBuilding)
-		api.GET("/room/:roomId", h.GetRoomNameById)
-		api.GET("/schedule", h.GetScheduleByRoomAndDate)
-		api.GET("/reserved_lesssons", h.GetReservedLessonsByRoomAndDate)
-		api.GET("/all_reserved_lesssons", h.GetAllReservedLessons)
-	}
 	return router
 }

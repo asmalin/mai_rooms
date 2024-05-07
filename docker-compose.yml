@@ -1,0 +1,46 @@
+services:
+  backend:
+    build: ./Backend
+    command: ./wait-for-postgres.sh db /Backend
+    # command: /Backend
+    ports:
+      - 5001:5000
+    environment:
+      - POSTGRES_PASSWORD=123
+    depends_on:
+      - db
+
+  db:
+    restart: always
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "123"
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./init-db.sql:/docker-entrypoint-initdb.d/create-db.sql
+    ports:
+      - "5432:5432"
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready -U postgres"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
+    
+
+  frontend:
+    build: ./Frontend
+    ports:
+      - "3001:3000"
+    
+  proxy:
+    build: ./Nginx
+    volumes:
+      - ./Nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+    
+

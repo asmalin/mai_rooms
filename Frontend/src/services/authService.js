@@ -1,7 +1,7 @@
 export async function refreshTokens() {
   try {
-    const server_domain = process.env.REACT_APP_SERVER_BASE_URL;
-    const response = await fetch(server_domain + "/auth/refresh", {
+    
+    const response = await fetch("/auth/refresh", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -17,8 +17,8 @@ export async function refreshTokens() {
 
 export async function logout() {
   try {
-    const server_domain = process.env.REACT_APP_SERVER_BASE_URL;
-    const response = await fetch(server_domain + "/logout", {
+    
+    const response = await fetch("/logout", {
       method: "GET",
       credentials: "include",
     });
@@ -41,8 +41,8 @@ export async function checkAuth() {
     return;
   }
   try {
-    const server_domain = process.env.REACT_APP_SERVER_BASE_URL;
-    const response = await fetch(server_domain + "/auth/check", {
+    
+    const response = await fetch("/auth/check", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

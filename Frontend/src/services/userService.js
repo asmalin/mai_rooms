@@ -5,8 +5,8 @@ export async function getAllUsers() {
     return;
   }
   try {
-    const server_domain = process.env.REACT_APP_SERVER_BASE_URL;
-    const response = await fetch(server_domain + "/api/users", {
+    
+    const response = await fetch("/api/users", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -32,8 +32,8 @@ export async function createUser(userData) {
     return;
   }
   try {
-    const server_domain = process.env.REACT_APP_SERVER_BASE_URL;
-    const response = await fetch(server_domain + "/api/users/create", {
+    
+    const response = await fetch("/api/users/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -55,9 +55,9 @@ export async function deleteUser(userId) {
     return;
   }
   try {
-    const server_domain = process.env.REACT_APP_SERVER_BASE_URL;
+    
     const response = await fetch(
-      server_domain + "/api/users/delete/" + userId,
+      "/api/users/delete/" + userId,
       {
         method: "DELETE",
         headers: {

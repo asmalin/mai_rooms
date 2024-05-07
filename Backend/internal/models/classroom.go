@@ -19,8 +19,8 @@ type Lesson struct {
 	ID        int       `json:"-"`
 	Lector    string    `json:"lector"`
 	Date      time.Time `json:"date" gorm:"type: date"`
-	TimeStart string    `json:"time_start" gorm:"type: timestamp without time zone"`
-	TimeEnd   string    `json:"time_end" gorm:"type: timestamp without time zone"`
+	TimeStart string    `json:"time_start" gorm:"type: time without time zone"`
+	TimeEnd   string    `json:"time_end" gorm:"type: time without time zone"`
 	Name      string    `json:"name"`
 	Groups    string    `json:"groups"`
 	Type      string    `json:"type"`

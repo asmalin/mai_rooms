@@ -1,0 +1,19 @@
+FROM golang:1.22.0 AS builder
+
+WORKDIR /app
+
+COPY ./ ./
+
+# install psql
+RUN apt-get update
+RUN apt-get -y install postgresql-client
+
+# make wait-for-postgres.sh executable
+RUN chmod +x wait-for-postgres.sh
+
+# build
+RUN go mod download
+RUN CGO_ENABLED=0 GOOS=linux go build -o /Backend ./cmd
+
+# Run
+#CMD ["/wait-for-postgres.sh", "db", "/Backend"]

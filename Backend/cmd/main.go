@@ -4,59 +4,16 @@ import (
 	"classrooms/internal/handler"
 	"classrooms/internal/repository"
 	"classrooms/internal/service"
+	"classrooms/utils"
 	"log"
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/robfig/cron"
+	"gorm.io/gorm"
 )
 
-type Group struct {
-	Name   string `json:"name"`
-	Fac    string `json:"fac"`
-	Level  string `json:"level"`
-	Course string `json:"course"`
-}
-
-type Pair struct {
-	TimeStart string            `json:"time_start"`
-	TimeEnd   string            `json:"time_end"`
-	Name      string            `json:"name"`
-	Groups    []string          `json:"groups"`
-	Type      []string          `json:"types"`
-	Rooms     map[string]string `json:"rooms"`
-}
-
-type DaySchedule struct {
-	Date  string           `json:"date"`
-	Day   string           `json:"day"`
-	Pairs map[string]*Pair `json:"pairs"`
-}
-
-type Schedule struct {
-	Name     string                  `json:"name"`
-	Groups   map[string]int          `json:"groups"`
-	Schedule map[string]*DaySchedule `json:"schedule"`
-}
-
-type Lesson struct {
-	Lector    string
-	Date      string
-	TimeStart string
-	TimeEnd   string
-	Name      string
-	Groups    []string
-	Type      string
-	Room      string
-}
-
 func main() {
-
-	// groupNames, _ := utils.GetAllGroupNames()
-	// var groups []string
-	// for _, group := range groupNames {
-	// 	groups = append(groups, group.Name)
-	// }
-	// utils.WriteToFile(groups, "allgroupNames.json")
 
 	if err := godotenv.Load("../.env"); err != nil {
 		log.Fatalf("Error loading env variables.")
@@ -71,18 +28,6 @@ func main() {
 		SSLMode:  os.Getenv("DB_SSLMode"),
 	})
 
-	// lectorSchedule, err := utils.GetLectorSchedule("0cb88141-658c-11e4-a65a-00155d79380a")
-	// if err != nil {
-	// 	fmt.Println("err: ", err)
-	// }
-
-	// for key, _ := range lectorSchedule.Schedule {
-	// 	fmt.Println("key: " + key)
-
-	// }
-
-	// os.Exit(1)
-
 	if err != nil {
 		log.Fatalf("Failed to init DB: %s", err.Error())
 	}
@@ -91,45 +36,18 @@ func main() {
 	services := service.NewService(repo)
 	handlers := handler.NewHandler(services)
 
-	// groupNames, _ := utils.GetAllGroupNames()
+	utils.RefreshSchedule(db)
+	setupCron(db)
 
-	// for _, group := range groupNames {
-	// 	res, _ := utils.GetGroupSchedule(group)
-	// 	utils.InsertGroupScheduleIntoDB(res, db)
-	// }
+	handlers.InitRoutes().Run("0.0.0.0:5001")
 
-	// os.Exit(1)
-	/////////////////////
-	///////////////
-	/////////
+}
 
-	//services.Schedule.RefreshLectorSchedule()
+func setupCron(db *gorm.DB) {
+	c := cron.New()
 
-	// filePathWithLectorsInfo := "../internal/localStorage/allLectors.json"
-
-	// fileContent, err := os.ReadFile(filePathWithLectorsInfo)
-	// if err != nil {
-	// 	fmt.Println("Error reading file:", err)
-	// 	return
-	// }
-
-	// var lectors map[string]string
-	// if err := json.Unmarshal(fileContent, &lectors); err != nil {
-	// 	fmt.Println("Ошибка при декодировании JSON:", err)
-	// }
-
-	// for _, lectorName := range lectors {
-	// 	var lesson models.Lesson
-	// 	err := db.Where("lector = ?", lectorName).First(&lesson).Error
-
-	// 	if err != nil {
-	// 		fmt.Println("OPA: ", lectorName, "\n", err)
-	// 	}
-
-	// }
-	//err = services.Schedule.RefreshLectorSchedule()
-	//fmt.Println(lectorSchedule)
-
-	handlers.InitRoutes().Run("localhost:8080")
-
+	c.AddFunc("0 3 * * 0", func() {
+		utils.RefreshSchedule(db)
+	})
+	c.Start()
 }

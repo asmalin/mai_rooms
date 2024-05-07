@@ -9,8 +9,8 @@ export async function reserveRoom(lessonForReservation) {
     return;
   }
   try {
-    const server_domain = process.env.REACT_APP_SERVER_BASE_URL;
-    const response = await fetch(server_domain + "/api/reserve", {
+    
+    const response = await fetch("/api/reserve", {
       method: "POST",
       body: JSON.stringify(lessonForReservation),
       headers: {
@@ -37,8 +37,8 @@ export async function cancelReserve(lessonForCancelReservation) {
     return;
   }
   try {
-    const server_domain = process.env.REACT_APP_SERVER_BASE_URL;
-    const response = await fetch(server_domain + "/api/cancelReservation", {
+    
+    const response = await fetch("/api/cancelReservation", {
       method: "POST",
       body: JSON.stringify(lessonForCancelReservation),
       headers: {
@@ -156,8 +156,8 @@ function downloadWithCaption(dataurl, caption) {
 
 async function getRoomNameById(roomId) {
   try {
-    const server_domain = process.env.REACT_APP_SERVER_BASE_URL;
-    const response = await fetch(server_domain + "/api/room/" + roomId, {
+    
+    const response = await fetch("/api/room/" + roomId, {
       method: "GET",
     });
 

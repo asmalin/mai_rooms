@@ -24,9 +24,9 @@ function Home() {
   };
 
   useEffect(() => {
-    const server_domain = process.env.REACT_APP_SERVER_BASE_URL;
+    
     axios
-      .get(server_domain + "/api/buildings")
+      .get("/api/buildings")
       .then((response) => {
         setBuildingsList(response.data);
       })
@@ -37,8 +37,8 @@ function Home() {
 
   useEffect(() => {
     if (selectedBuilding) {
-      const server_domain = process.env.REACT_APP_SERVER_BASE_URL;
-      const apiUrl = server_domain + "/api/rooms/" + selectedBuilding;
+      
+      const apiUrl = "/api/rooms/" + selectedBuilding;
       fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => setRoomsList(data));
