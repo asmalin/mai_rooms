@@ -42,8 +42,6 @@ func (l *LoginPostgres) GetUserById(id int) (models.User, error) {
 
 func (l *LoginPostgres) AddUserTgChatRelation(userId int, tgChatId int64) error {
 
-	l.db.AutoMigrate(&models.UserTgChatRelation{})
-
 	user, _ := l.GetUserById(userId)
 	userTgChatRekation := models.UserTgChatRelation{UserId: userId, TgChatId: tgChatId, User: user}
 

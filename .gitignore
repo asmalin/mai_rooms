@@ -1,0 +1,3 @@
+.env
+.database
+wait-for-postgres.sh

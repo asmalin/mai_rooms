@@ -17,7 +17,6 @@ func NewReservationPostgres(db *gorm.DB) *ReservationPostgres {
 
 func (r *ReservationPostgres) ReserveRoom(reservedRoom models.ReservedLesson) error {
 
-	r.db.AutoMigrate(models.ReservedLesson{})
 	result := r.db.Create(&reservedRoom)
 	if result.Error != nil {
 		return errors.New("insert error")

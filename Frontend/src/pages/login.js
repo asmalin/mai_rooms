@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 import axios from "axios";
 
-const API_URL = "http://localhost:8080";
 
 const Login = ({ setUser }) => {
   const [username, setUsername] = useState("");
@@ -23,7 +22,7 @@ const Login = ({ setUser }) => {
 
     await axios
       .post(
-        `${API_URL}/login`,
+        `api/login`,
         {
           username,
           password,

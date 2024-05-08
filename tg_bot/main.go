@@ -46,16 +46,6 @@ func main() {
 	var allBuildings = make(map[string]models.Building)
 	var allRooms = make(map[string]models.Room)
 
-	buildings := service.Buildings()
-	for _, building := range buildings {
-		allBuildings[fmt.Sprint(building.Id)] = building
-		rooms := service.Rooms(building.Id)
-		for _, room := range rooms {
-			room.Building_id = building.Id
-			allRooms[fmt.Sprint(room.ID)] = room
-		}
-	}
-
 	bh.Handle(func(bot *telego.Bot, update telego.Update) {
 
 		chatID := tu.ID(update.Message.Chat.ID)
@@ -72,6 +62,16 @@ func main() {
 		))
 
 		ShowBuildingsPage(chatID, bot, buttonsPrefixes.Building)
+
+		buildings := service.Buildings()
+		for _, building := range buildings {
+			allBuildings[fmt.Sprint(building.Id)] = building
+			rooms := service.Rooms(building.Id)
+			for _, room := range rooms {
+				room.Building_id = building.Id
+				allRooms[fmt.Sprint(room.ID)] = room
+			}
+		}
 
 	}, th.CommandEqual("start"))
 

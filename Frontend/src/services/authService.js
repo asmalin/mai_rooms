@@ -18,7 +18,7 @@ export async function refreshTokens() {
 export async function logout() {
   try {
     
-    const response = await fetch("/logout", {
+    const response = await fetch("/auth/logout", {
       method: "GET",
       credentials: "include",
     });

@@ -15,7 +15,7 @@ import (
 
 func main() {
 
-	if err := godotenv.Load("../.env"); err != nil {
+	if err := godotenv.Load("/app/.env"); err != nil {
 		log.Fatalf("Error loading env variables.")
 	}
 
@@ -36,7 +36,10 @@ func main() {
 	services := service.NewService(repo)
 	handlers := handler.NewHandler(services)
 
-	utils.RefreshSchedule(db)
+	err = utils.InitDBEntities(db)
+	if err != nil {
+		log.Fatalf("Failed to init DB entities: %s", err.Error())
+	}
 	setupCron(db)
 
 	handlers.InitRoutes().Run("0.0.0.0:5001")

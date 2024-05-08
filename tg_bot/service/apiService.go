@@ -8,6 +8,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"tg_bot/models"
@@ -28,7 +29,7 @@ type tokenClaims struct {
 }
 
 func Buildings() []models.Building {
-	resp, err := http.Get("http://localhost:8080/api/buildings")
+	resp, err := http.Get("/api/buildings")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -43,7 +44,7 @@ func Buildings() []models.Building {
 }
 
 func Rooms(building_id int) []models.Room {
-	resp, err := http.Get("http://localhost:8080/api/rooms/" + fmt.Sprint(building_id))
+	resp, err := http.Get("/api/rooms/" + fmt.Sprint(building_id))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -58,7 +59,7 @@ func Rooms(building_id int) []models.Room {
 }
 
 func Schedule(room_id string, date string) []models.ScheduleLesson {
-	resp, err := http.Get(fmt.Sprintf("http://localhost:8080/api/schedule?room=%s&date=%s", room_id, date))
+	resp, err := http.Get(fmt.Sprintf("/api/schedule?room=%s&date=%s", room_id, date))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -73,7 +74,7 @@ func Schedule(room_id string, date string) []models.ScheduleLesson {
 }
 
 func ReservedLessons(room_id string, date string) []models.ReservedLesson {
-	resp, err := http.Get(fmt.Sprintf("http://localhost:8080/api/reserved_lesssons?room=%s&date=%s", room_id, date))
+	resp, err := http.Get(fmt.Sprintf("/api/reserved_lesssons?room=%s&date=%s", room_id, date))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -92,7 +93,7 @@ func Auth(username string, password string, chatId int64) (err error) {
 	jsonData, _ := json.Marshal(LoginInput{Username: username, Password: password, ChatId: chatId})
 	requestBody := bytes.NewBuffer(jsonData)
 
-	resp, err := http.Post("http://localhost:8080/tg_login", "application/json", requestBody)
+	resp, err := http.Post("/api/auth/tg_login", "application/json", requestBody)
 
 	if err != nil {
 		return err
@@ -113,7 +114,7 @@ func Reserve(chatId int64, lesson models.LessonForReservationJSON) error {
 
 	client := &http.Client{}
 
-	req, err := http.NewRequest("POST", "http://localhost:8080/api/reserve", requestBody)
+	req, err := http.NewRequest("POST", "/api/reserve", requestBody)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -126,7 +127,7 @@ func Reserve(chatId int64, lesson models.LessonForReservationJSON) error {
 		chatId,
 	})
 
-	tokenStr, _ := token.SignedString([]byte("key115824"))
+	tokenStr, _ := token.SignedString([]byte(os.Getenv("Secret_key")))
 
 	req.Header.Set("Authorization", "Bearer "+tokenStr)
 

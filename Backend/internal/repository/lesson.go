@@ -44,7 +44,6 @@ func (l *LessonPostgres) GetScheduleLessons(roomId int, date time.Time) ([]model
 }
 
 func (l *LessonPostgres) InsertLessonToDB(lesson models.Lesson) error {
-	l.db.AutoMigrate(&models.Lesson{})
 
 	if l.db.Create(&lesson).Error != nil {
 		return errors.New("ошибка при добавлении записи")

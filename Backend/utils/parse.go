@@ -8,6 +8,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -122,7 +123,6 @@ func GetGroupSchedule(groupName string) (Schedule, error) {
 
 func InsertGroupScheduleIntoDB(schedule Schedule, db *gorm.DB) error {
 
-	db.AutoMigrate(&models.Lesson{}, &models.Building{}, &models.Room{})
 	fmt.Println(schedule.Group)
 	for date, pairs := range schedule.Dates {
 		for _, pairTime := range pairs.Pairs {
@@ -176,6 +176,35 @@ func InsertGroupScheduleIntoDB(schedule Schedule, db *gorm.DB) error {
 			}
 
 		}
+	}
+	return nil
+}
+
+func InitDBEntities(db *gorm.DB) error {
+	err := db.AutoMigrate(
+		&models.Building{},
+		&models.Room{},
+		&models.Lesson{},
+		&models.ReservedLesson{},
+		&models.User{},
+		&models.UserTgChatRelation{},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	result := db.Create(&models.User{
+		Id:       1,
+		Username: os.Getenv("START_USER_USERNAME"),
+		Password: os.Getenv("START_USER_PASSWORD"),
+		Fullname: os.Getenv("START_USER_FULLNAME"),
+		Role:     os.Getenv("START_USER_ROLE"),
+		Email:    os.Getenv("START_USER_EMAIL"),
+	})
+
+	if result.Error != nil {
+		return result.Error
 	}
 	return nil
 }

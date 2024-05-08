@@ -18,7 +18,7 @@ export default function ReservationMgmt({ user }) {
 
   function fetchReservedRooms() {
     axios
-      .get("http://localhost:8080/api/all_reserved_lesssons")
+      .get("/api/all_reserved_lesssons")
       .then((response) => {
         setReservedLessons(response.data);
       })
