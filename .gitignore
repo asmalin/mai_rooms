@@ -1,3 +1,4 @@
 *.env
 .database
 /Backend/wait-for-postgres.sh
+/db_postgres/init-db.sql
