@@ -1,5 +1,3 @@
-.env
-/Backend/.env
-/tg_bot/.env
+*.env
 .database
-/db_postgres/wait-for-postgres.sh
+/Backend/wait-for-postgres.sh
