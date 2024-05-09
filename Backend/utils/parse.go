@@ -48,7 +48,6 @@ func RefreshSchedule(db *gorm.DB) {
 		return
 	}
 
-	fmt.Println("DELETED!")
 	for _, group := range groupNames {
 		res, _ := GetGroupSchedule(group)
 		InsertGroupScheduleIntoDB(res, db)
