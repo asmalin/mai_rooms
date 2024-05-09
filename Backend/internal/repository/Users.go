@@ -34,6 +34,7 @@ func (r *RoomPostgres) CreateUser(user models.User) (err error) {
 }
 
 func (r *RoomPostgres) DeleteUser(userId int) error {
+
 	result := r.db.Delete(models.User{}, "id = ?", userId)
 	if result.Error != nil {
 		return result.Error
