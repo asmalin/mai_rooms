@@ -7,7 +7,7 @@ type User struct {
 	Fullname        string           `json:"fullname" binding:"required" gorm:"type:varchar(255)"`
 	Role            string           `json:"role" binding:"required" gorm:"type:varchar(50)"`
 	Email           string           `json:"email" gorm:"type:varchar(255)"`
-	ReservedLessons []ReservedLesson `json:"-"`
+	ReservedLessons []ReservedLesson `json:"-" gorm:"constraint:OnDelete:CASCADE"`
 }
 
 type UserTgChatRelation struct {
