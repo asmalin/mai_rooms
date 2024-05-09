@@ -40,7 +40,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to init DB entities: %s", err.Error())
 	}
-	utils.RefreshSchedule(db)
+
 	setupCron(db)
 
 	handlers.InitRoutes().Run("0.0.0.0:5001")
