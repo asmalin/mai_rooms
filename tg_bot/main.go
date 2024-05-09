@@ -189,7 +189,9 @@ func main() {
 		chatId := telego.ChatID{ID: query.Message.GetChat().ID}
 		queryData := strings.Split(query.Data, "|")
 
-		roomId := queryData[1]
+		roomIdStr := queryData[1]
+
+		roomId, _ := strconv.Atoi(roomIdStr)
 		date := queryData[2]
 		timeStart := queryData[3]
 		timeEnd := queryData[4]
@@ -216,7 +218,7 @@ func main() {
 			Text:      "Аудитория успешно забронирована!",
 			ReplyMarkup: tu.InlineKeyboard(
 				tu.InlineKeyboardRow(
-					tu.InlineKeyboardButton("Назад").WithCallbackData(buttonsPrefixes.Room + "|" + roomId),
+					tu.InlineKeyboardButton("Назад").WithCallbackData(buttonsPrefixes.Room + "|" + roomIdStr),
 				),
 			),
 		})

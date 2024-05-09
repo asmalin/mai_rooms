@@ -12,7 +12,7 @@ type Room struct {
 }
 
 type LessonForReservationJSON struct {
-	RoomId    string `json:"roomId"`
+	RoomId    int    `json:"roomId"`
 	Date      string `json:"date"`
 	StartTime string `json:"startTime"`
 	EndTime   string `json:"endTime"`
