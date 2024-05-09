@@ -2,7 +2,7 @@ import React from "react";
 import "../styles/qrcode.css";
 import AdminNav from "../components/AdminNav";
 
-import { CreateQRCodes } from "../services/ReservationService";
+import { CreateQRCodes } from "../services/qrcodeService";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
