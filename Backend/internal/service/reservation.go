@@ -5,6 +5,7 @@ import (
 	"classrooms/internal/models"
 	"classrooms/internal/repository"
 	"errors"
+	"time"
 )
 
 type ReservationService struct {
@@ -24,10 +25,10 @@ func (r *ReservationService) ReserveRoom(reservedRoom models.ReservedLesson) err
 func (r *ReservationService) CancelReservation(lessonForCancelReservation dto.LessonForCancelReservationDto) error {
 	user := lessonForCancelReservation.User
 	roomId := lessonForCancelReservation.Room_id
-	date := lessonForCancelReservation.Date.Format("02.01.2006")
+
 	startTime := lessonForCancelReservation.StartTime
 
-	lesson, err := r.repo.GetReservedLesson(roomId, date, startTime)
+	lesson, err := r.repo.GetReservedLesson(roomId, lessonForCancelReservation.Date, startTime)
 	if err != nil {
 		return err
 	}
@@ -46,7 +47,14 @@ func (r *ReservationService) CancelReservation(lessonForCancelReservation dto.Le
 }
 
 func (r *ReservationService) GetReservationRoom(roomId int, date string) ([]models.ReservedLesson, error) {
-	result, err := r.repo.GetReservedLessons(roomId, date)
+
+	parsedDate, err := time.Parse("02.01.2006", date)
+
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := r.repo.GetReservedLessons(roomId, parsedDate)
 	if err != nil {
 		return nil, err
 	}

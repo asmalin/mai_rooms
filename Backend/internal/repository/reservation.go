@@ -3,6 +3,7 @@ package repository
 import (
 	"classrooms/internal/models"
 	"errors"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -45,7 +46,7 @@ func (r *ReservationPostgres) GetAllReservedLessons() ([]models.ReservedLesson, 
 	return reservedLessons, nil
 }
 
-func (r *ReservationPostgres) GetReservedLessons(roomId int, date string) ([]models.ReservedLesson, error) {
+func (r *ReservationPostgres) GetReservedLessons(roomId int, date time.Time) ([]models.ReservedLesson, error) {
 
 	var reservedLessons []models.ReservedLesson
 	result := r.db.Where("room_id = ? AND date = ?", roomId, date).Find(&reservedLessons)
@@ -56,7 +57,7 @@ func (r *ReservationPostgres) GetReservedLessons(roomId int, date string) ([]mod
 	return reservedLessons, nil
 }
 
-func (r *ReservationPostgres) GetReservedLesson(roomId int, date string, startTime string) (models.ReservedLesson, error) {
+func (r *ReservationPostgres) GetReservedLesson(roomId int, date time.Time, startTime string) (models.ReservedLesson, error) {
 	var reservedLessons models.ReservedLesson
 	result := r.db.Where("room_id = ? AND date = ? AND time_start = ?", roomId, date, startTime).Find(&reservedLessons)
 	if result.Error != nil {

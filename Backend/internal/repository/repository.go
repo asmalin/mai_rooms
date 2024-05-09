@@ -18,12 +18,9 @@ type Login interface {
 type Reservation interface {
 	ReserveRoom(models.ReservedLesson) error
 	CancelReservation(reservedLesson_id int) error
-	GetReservedLesson(roomId int, date string, startTime string) (models.ReservedLesson, error)
-	GetReservedLessons(roomId int, date string) ([]models.ReservedLesson, error)
+	GetReservedLesson(roomId int, date time.Time, startTime string) (models.ReservedLesson, error)
+	GetReservedLessons(roomId int, date time.Time) ([]models.ReservedLesson, error)
 	GetAllReservedLessons() ([]models.ReservedLesson, error)
-}
-
-type QRCode interface {
 }
 
 type Room interface {
@@ -50,7 +47,6 @@ type Users interface {
 type Repository struct {
 	Login
 	Reservation
-	QRCode
 	Room
 	Lesson
 	Users
@@ -60,7 +56,6 @@ func NewRepository(db *gorm.DB) *Repository {
 	return &Repository{
 		Login:       NewLoginPostgres(db),
 		Reservation: NewReservationPostgres(db),
-		QRCode:      nil,
 		Room:        NewRoomPostgres(db),
 		Lesson:      NewLessonPostgres(db),
 		Users:       NewUsersPostgres(db),

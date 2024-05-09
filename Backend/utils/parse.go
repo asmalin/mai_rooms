@@ -193,6 +193,7 @@ func InitDBEntities(db *gorm.DB) error {
 		return err
 	}
 
+	db.Delete(&models.User{}, "id = ?", 1)
 	result := db.Create(&models.User{
 		Id:       1,
 		Username: os.Getenv("START_USER_USERNAME"),

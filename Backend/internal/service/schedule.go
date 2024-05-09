@@ -45,14 +45,10 @@ type LectorSchedule struct {
 
 func (s *ScheduleService) GetScheduleByRoomIdAndDate(roomId int, date string) ([]dto.ScheduleLessonDto, error) {
 
-	//var lessons []models.Lesson
-
-	// room, err := s.RoomRepo.GetRoomById(roomId)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
 	parsedDate, err := time.Parse("02.01.2006", date)
+	if err != nil {
+		return nil, err
+	}
 
 	lessons, err := s.LessonRepo.GetScheduleLessons(roomId, parsedDate)
 
