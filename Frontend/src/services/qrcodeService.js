@@ -36,7 +36,7 @@ for (const room of roomsData) {
         } else {
             downloadWithCaption(
             qrCodeImageDataUrl,
-            `qrcode_${room.name}.png`,
+            `${room.name}`,
             room.name
             )
             .then((blob) => {
