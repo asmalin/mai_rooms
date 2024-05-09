@@ -28,7 +28,7 @@ promises = [];
 for (const room of roomsData) {
     const promise = new Promise((resolve, reject) => {
     QRCode.toDataURL(
-        website_domain + `/rooms?roomId=${room.id}`,
+        `/rooms?roomId=${room.id}`,
         opts,
         function (err, qrCodeImageDataUrl) {
         if (err) {
