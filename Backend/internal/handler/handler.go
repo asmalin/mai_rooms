@@ -46,8 +46,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			auth.POST("/login", h.Login)
 			auth.GET("/logout", h.Logout)
-			auth.GET("/auth/refresh", h.AuthRefresh)
-			auth.GET("/auth/check", h.userIdentity, h.checkAuth)
+			auth.GET("/refresh", h.AuthRefresh)
+			auth.GET("/check", h.userIdentity, h.checkAuth)
 
 			auth.POST("/tg_login", h.TgLogin)
 		}
