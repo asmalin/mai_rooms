@@ -22,7 +22,7 @@ const Login = ({ setUser }) => {
 
     await axios
       .post(
-        `api/login`,
+        `api/auth/login`,
         {
           username,
           password,

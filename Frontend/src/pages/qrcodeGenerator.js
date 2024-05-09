@@ -16,7 +16,7 @@ export default function QRcodesGenerator({ user }) {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/buildings")
+      .get("/api/buildings")
       .then((response) => {
         setBuildingsList(response.data);
       })
@@ -27,7 +27,7 @@ export default function QRcodesGenerator({ user }) {
 
   useEffect(() => {
     if (selectedBuilding) {
-      const apiUrl = "http://localhost:8080/api/rooms/" + selectedBuilding;
+      const apiUrl = "/api/rooms/" + selectedBuilding;
       fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => setRoomsList(data));
