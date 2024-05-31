@@ -3,17 +3,17 @@
     flex: 1 1 auto
   }
   
-  .admin_panel {
-    
+.admin_panel {
+
     background-color: #e9eaff;
     padding: 20px;
 
-  }
+}
   
-  .profile_info {
+.profile_info {
     padding: 10px 60px 50px 60px;
     width: 100%;
-  }
+}
 
 
 
@@ -30,6 +30,7 @@
 
 .profile_field {
     width: 100%;
+    height: 40px;
 }
   
 
@@ -38,7 +39,7 @@
 }
 
 .profile_ul li span{
-    width: 55px 
+    width: 105px 
 }
 
 .btn{
@@ -66,4 +67,13 @@
 
 .successMsg{
     color: green;
+}
+
+input[type='email']{
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 1rem;
 }

@@ -16,20 +16,8 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-type LoginInput struct {
-	Username string
-	Password string
-	ChatId   int64
-}
-
-type tokenClaims struct {
-	jwt.StandardClaims
-	UserId   int   `json:"user_id"`
-	TgChatId int64 `json:"tgChat_id"`
-}
-
 func Buildings() []models.Building {
-	resp, err := http.Get(os.Getenv("API_BASE_URL") + "/api/buildings")
+	resp, err := http.Get(os.Getenv("BASE_URL") + "/api/buildings")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -44,7 +32,7 @@ func Buildings() []models.Building {
 }
 
 func Rooms(building_id int) []models.Room {
-	resp, err := http.Get(os.Getenv("API_BASE_URL") + "/api/rooms/" + fmt.Sprint(building_id))
+	resp, err := http.Get(os.Getenv("BASE_URL") + "/api/rooms/" + fmt.Sprint(building_id))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -59,7 +47,7 @@ func Rooms(building_id int) []models.Room {
 }
 
 func Schedule(room_id string, date string) []models.ScheduleLesson {
-	resp, err := http.Get(fmt.Sprintf(os.Getenv("API_BASE_URL")+"/api/schedule?room=%s&date=%s", room_id, date))
+	resp, err := http.Get(fmt.Sprintf(os.Getenv("BASE_URL")+"/api/schedule?room=%s&date=%s", room_id, date))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -74,7 +62,7 @@ func Schedule(room_id string, date string) []models.ScheduleLesson {
 }
 
 func ReservedLessons(room_id string, date string) []models.ReservedLesson {
-	resp, err := http.Get(fmt.Sprintf(os.Getenv("API_BASE_URL")+"/api/reserved_lesssons?room=%s&date=%s", room_id, date))
+	resp, err := http.Get(fmt.Sprintf(os.Getenv("BASE_URL")+"/api/reserved_lesssons?room=%s&date=%s", room_id, date))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -88,33 +76,20 @@ func ReservedLessons(room_id string, date string) []models.ReservedLesson {
 	return reservedLessons
 }
 
-func Auth(username string, password string, chatId int64) (err error) {
+func Reserve(tgUsername string, lesson models.LessonForReservationJSON) error {
 
-	jsonData, _ := json.Marshal(LoginInput{Username: username, Password: password, ChatId: chatId})
-	requestBody := bytes.NewBuffer(jsonData)
-
-	resp, err := http.Post(os.Getenv("API_BASE_URL")+"/api/auth/tg_login", "application/json", requestBody)
+	userId, err := GetUserIdByTgUsername(tgUsername)
 
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return errors.New("неправильный логин или пароль")
-	}
-
-	return nil
-}
-
-func Reserve(chatId int64, lesson models.LessonForReservationJSON) error {
 
 	jsonData, _ := json.Marshal(lesson)
 	requestBody := bytes.NewBuffer(jsonData)
 
 	client := &http.Client{}
 
-	req, err := http.NewRequest("POST", os.Getenv("API_BASE_URL")+"/api/reserve", requestBody)
+	req, err := http.NewRequest("POST", os.Getenv("BASE_URL")+"/api/reserve", requestBody)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -123,8 +98,57 @@ func Reserve(chatId int64, lesson models.LessonForReservationJSON) error {
 		jwt.StandardClaims{
 			IssuedAt: time.Now().Unix(),
 		},
-		0,
-		chatId,
+		userId,
+	})
+
+	tokenStr, _ := token.SignedString([]byte(os.Getenv("Secret_key")))
+
+	req.Header.Set("Authorization", "Bearer "+tokenStr)
+
+	resp, err := client.Do(req)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("Ошибка при чтении тела ответа:", err)
+		return err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		fmt.Println(string(body))
+		return errors.New(resp.Status)
+	}
+
+	return nil
+}
+
+func CancelReserve(tgUsername string, lesson models.LessonForCancelReservationJSON) error {
+
+	userId, err := GetUserIdByTgUsername(tgUsername)
+
+	if err != nil {
+		return err
+	}
+
+	jsonData, _ := json.Marshal(lesson)
+	requestBody := bytes.NewBuffer(jsonData)
+
+	client := &http.Client{}
+
+	req, err := http.NewRequest("POST", os.Getenv("BASE_URL")+"/api/cancelReservation", requestBody)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
+		jwt.StandardClaims{
+			IssuedAt: time.Now().Unix(),
+		},
+		userId,
 	})
 
 	tokenStr, _ := token.SignedString([]byte(os.Getenv("Secret_key")))

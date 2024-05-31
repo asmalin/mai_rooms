@@ -100,6 +100,9 @@ func (h *Handler) UpdateUser(c *gin.Context) {
 	if updatedUser.Email != "" {
 		existingUser.Email = updatedUser.Email
 	}
+	if updatedUser.TgUsername != "" {
+		existingUser.TgUsername = updatedUser.TgUsername
+	}
 	if updatedUser.Role != "" {
 		existingUser.Role = updatedUser.Role
 	}

@@ -186,7 +186,6 @@ func InitDBEntities(db *gorm.DB) error {
 		&models.Lesson{},
 		&models.ReservedLesson{},
 		&models.User{},
-		&models.UserTgChatRelation{},
 	)
 
 	if err != nil {

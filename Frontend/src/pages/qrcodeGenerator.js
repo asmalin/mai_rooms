@@ -1,9 +1,9 @@
 import React from "react";
 import "../styles/qrcode.css";
 import AdminNav from "../components/AdminNav";
-
+import qrcodeLogo from "../img/qrcode_scan.png";
 import { CreateQRCodes } from "../services/qrcodeService";
-
+import { QRCodeGenerator } from "../services/qrcodeService";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -14,9 +14,23 @@ export default function QRcodesGenerator({ user }) {
   const [selectedRooms, setSelectedRooms] = useState([]);
   const [error, setError] = useState(false);
 
+  const [showClickedQRcode, setShowClickedQRcode] = useState(false);
+  const [roomIdForQRcode, setroomIdForQRcode] = useState(false);
+
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      setShowClickedQRcode(false);
+    }
+  };
+
+  const showQRcode = (roomId) => {
+    setroomIdForQRcode(roomId);
+    setShowClickedQRcode(true);
+  };
+
   useEffect(() => {
     axios
-      .get("/api/buildings")
+      .get("http://localhost:5001/api/buildings")
       .then((response) => {
         setBuildingsList(response.data);
       })
@@ -27,7 +41,7 @@ export default function QRcodesGenerator({ user }) {
 
   useEffect(() => {
     if (selectedBuilding) {
-      const apiUrl = "/api/rooms/" + selectedBuilding;
+      const apiUrl = "http://localhost:5001/api/rooms/" + selectedBuilding;
       fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => setRoomsList(data));
@@ -57,6 +71,7 @@ export default function QRcodesGenerator({ user }) {
       <AdminNav />
       <div className="qrcode_generator">
         <h2>Создать QRCode для выбранной аудиториий</h2>
+
         <div className="select-building">
           <h2>Выберете корпус</h2>
           <select
@@ -88,6 +103,12 @@ export default function QRcodesGenerator({ user }) {
                   <label className="form-check-label" htmlFor={room.id}>
                     {room.name}
                   </label>
+                  <img
+                    className="qrcode_logo"
+                    src={qrcodeLogo}
+                    alt="QRcode scan logo"
+                    onClick={() => showQRcode(room.id)}
+                  />
                 </div>
               ))}
             </div>
@@ -100,6 +121,11 @@ export default function QRcodesGenerator({ user }) {
               Скачать
             </button>
           </form>
+        )}
+        {showClickedQRcode && (
+          <div className="overlay" onClick={handleOverlayClick}>
+            <QRCodeGenerator roomId={roomIdForQRcode} />
+          </div>
         )}
       </div>
     </>

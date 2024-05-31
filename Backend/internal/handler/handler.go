@@ -49,7 +49,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			auth.GET("/refresh", h.AuthRefresh)
 			auth.GET("/check", h.userIdentity, h.checkAuth)
 
-			auth.POST("/tg_login", h.TgLogin)
+			auth.POST("/tg/getUserId", h.GetUserIdByTgUsername)
 		}
 	}
 

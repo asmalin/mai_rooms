@@ -12,13 +12,34 @@ export default function ReservationMgmt({ user }) {
     date: "",
   });
 
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const [lessonForCanceling, setLessonForCanceling] = useState({
+    roomId: 0,
+    roomName: "",
+    date: "",
+    startTime: "",
+    endTime: "",
+  });
+
+  const confirmCancelLesson = (roomId, roomName, date, timeStart, timeEnd) => {
+    setShowConfirm(true);
+    setLessonForCanceling({
+      roomId: roomId,
+      roomName: roomName,
+      date: date,
+      startTime: timeStart,
+      timeEnd: timeEnd,
+    });
+  };
+
   useEffect(() => {
     fetchReservedRooms();
   }, []);
 
   function fetchReservedRooms() {
     axios
-      .get("/api/all_reserved_lesssons")
+      .get("http://localhost:5001/api/all_reserved_lesssons")
       .then((response) => {
         setReservedLessons(response.data);
       })
@@ -42,14 +63,22 @@ export default function ReservationMgmt({ user }) {
     : [];
 
   function handleCancelLesson(roomId, date, time_start) {
+    setShowConfirm(false);
     const lessonForCancelReserve = {
       roomId: roomId,
       date: date,
       startTime: time_start,
     };
-    console.log(lessonForCancelReserve);
+
     cancelReserve(lessonForCancelReserve).then(() => fetchReservedRooms());
   }
+
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      setShowConfirm(false);
+    }
+  };
+
   return (
     <>
       <AdminNav />
@@ -112,10 +141,12 @@ export default function ReservationMgmt({ user }) {
                     <button
                       className="btn btn-danger"
                       onClick={() =>
-                        handleCancelLesson(
+                        confirmCancelLesson(
                           lesson.room_id,
+                          lesson.room_name,
                           lesson.date,
-                          lesson.time_start
+                          lesson.time_start,
+                          lesson.time_end
                         )
                       }
                     >
@@ -128,6 +159,38 @@ export default function ReservationMgmt({ user }) {
           </table>
         ) : (
           <h2>Список пуст!</h2>
+        )}
+        {showConfirm && (
+          <div className="overlay" onClick={handleOverlayClick}>
+            <div className="confirmation-dialog">
+              <p>
+                Вы уверены, что хотите удалить бронь аудитории{" "}
+                <b>{lessonForCanceling.roomName}</b> {lessonForCanceling.date} с{" "}
+                {lessonForCanceling.startTime} по {lessonForCanceling.timeEnd}?
+              </p>
+
+              <div className="confirmDlgBtns">
+                <button
+                  className="btn btn-danger"
+                  onClick={() =>
+                    handleCancelLesson(
+                      lessonForCanceling.roomId,
+                      lessonForCanceling.date,
+                      lessonForCanceling.startTime
+                    )
+                  }
+                >
+                  Да
+                </button>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setShowConfirm(false)}
+                >
+                  Нет
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </>

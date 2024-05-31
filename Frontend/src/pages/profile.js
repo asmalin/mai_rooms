@@ -5,7 +5,8 @@ import { updateUser, ChangePassword } from "../services/userService.js";
 
 export default function Profile({ user }) {
   const [isEditMode, setIsEditMode] = useState(false);
-  const [newEmail, setNewEmail] = useState("");
+  const [email, setEmail] = useState("");
+  const [tgUsername, setTgUsername] = useState("");
 
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -15,19 +16,32 @@ export default function Profile({ user }) {
 
   useEffect(() => {
     if (user) {
-      setNewEmail(user.email);
+      setEmail(user.email);
+      setTgUsername(
+        "@" + (user.tgUsername !== "" ? user.tgUsername : "username")
+      );
     }
   }, [user]);
 
+  const tgTagChange = (e) => {
+    const newTgUsername = e.target.value;
+    if (tgUsername[0] !== "@") {
+      setTgUsername("@" + newTgUsername);
+    } else {
+      setTgUsername(newTgUsername);
+    }
+  };
+
   const cancelEditing = () => {
     if (user) {
-      setNewEmail(user.email);
+      setEmail(user.email);
     }
     setIsEditMode(!isEditMode);
   };
 
   const saveChanges = () => {
-    updateUser({ id: user.id, email: newEmail });
+    const tgName = tgUsername.substring(1);
+    updateUser({ id: user.id, email: email, tgUsername: tgName });
     setIsEditMode(!isEditMode);
   };
 
@@ -70,10 +84,21 @@ export default function Profile({ user }) {
           <li>
             <span>email:</span>
             <input
+              type="email"
+              className="profile_field"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={!isEditMode}
+              required
+            />
+          </li>
+          <li>
+            <span>tg username:</span>
+            <input
               type="text"
               className="profile_field"
-              value={newEmail}
-              onChange={(e) => setNewEmail(e.target.value)}
+              value={tgUsername}
+              onChange={(e) => tgTagChange(e)}
               disabled={!isEditMode}
             />
           </li>

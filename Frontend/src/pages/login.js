@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 import axios from "axios";
 
-
 const Login = ({ setUser }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -22,7 +21,7 @@ const Login = ({ setUser }) => {
 
     await axios
       .post(
-        `api/auth/login`,
+        `http://localhost:5001/api/auth/login`,
         {
           username,
           password,

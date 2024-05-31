@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CollapsablePanel from "./CollapsablePanel";
 import "../styles/Lesson.css";
-import { checkAuth } from "../services/authService.js";
 import { reserveRoom, cancelReserve } from "../services/ReservationService.js";
 
 export default function Lesson({ fetchReservedRooms, user, ...props }) {
@@ -56,13 +55,21 @@ export default function Lesson({ fetchReservedRooms, user, ...props }) {
         type={"free"}
       >
         <div>
-          <textarea
-            value={comment}
-            placeholder="Комментарий"
-            onChange={(event) => setComment(event.target.value)}
-            rows="3"
-          ></textarea>
-          <button onClick={reserveRoomHandler}>Забронировать</button>
+          {user ? (
+            <>
+              <textarea
+                value={comment}
+                placeholder="Комментарий"
+                onChange={(event) => setComment(event.target.value)}
+                rows="3"
+              ></textarea>
+              <button onClick={reserveRoomHandler}>Забронировать</button>
+            </>
+          ) : (
+            <span>
+              Бронирование доступно только для авторизированных пользователей.
+            </span>
+          )}
         </div>
       </CollapsablePanel>
     );

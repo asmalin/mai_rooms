@@ -2,7 +2,7 @@ package handler
 
 import (
 	"classrooms/internal/models"
-	"fmt"
+	"encoding/json"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -116,19 +116,27 @@ func (h *Handler) generateTokens(user models.User) (accessToken, refreshToken st
 
 }
 
-func (h *Handler) TgLogin(c *gin.Context) {
+type TgData struct {
+	TgUsername string `json:"tgUsername"`
+}
 
-	var input tgloginInput
+func (h *Handler) GetUserIdByTgUsername(c *gin.Context) {
 
-	if err := c.BindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	fmt.Println(input.ChatId)
-	err := h.services.Login.TgAuth(input.Username, input.Password, input.ChatId)
+	var tgData TgData
+	err := json.NewDecoder(c.Request.Body).Decode(&tgData)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
-	c.JSON(http.StatusOK, "")
+
+	userId, err := h.services.Login.GetUserIdByTgUsername(tgData.TgUsername)
+
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, "не авторизован")
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"userId": userId,
+	})
 }

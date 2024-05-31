@@ -24,9 +24,8 @@ function Home() {
   };
 
   useEffect(() => {
-    
     axios
-      .get("/api/buildings")
+      .get("http://localhost:5001/api/buildings")
       .then((response) => {
         setBuildingsList(response.data);
       })
@@ -37,8 +36,7 @@ function Home() {
 
   useEffect(() => {
     if (selectedBuilding) {
-      
-      const apiUrl = "/api/rooms/" + selectedBuilding;
+      const apiUrl = "http://localhost:5001/api/rooms/" + selectedBuilding;
       fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => setRoomsList(data));

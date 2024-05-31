@@ -11,8 +11,7 @@ type Login interface {
 	GetUser(username, password string) (models.User, error)
 	GetUserById(id int) (models.User, error)
 
-	AddUserTgChatRelation(userId int, tgChatId int64) error
-	GetUserChatRelation(tgChatId int64) (models.UserTgChatRelation, error)
+	GetUserByTgUsername(tgUsername string) (models.User, error)
 }
 
 type Reservation interface {

@@ -8,14 +8,14 @@ import (
 
 type Login interface {
 	WebAuth(username, password string) (models.User, error)
-	TgAuth(username, password string, tgChatId int64) (err error)
-	UserIdByChatId(tgChatId int64) (userId int, err error)
 
 	GenerateAccessToken(models.User) (string, error)
 	GenerateRefreshToken(userId int) (string, error)
 
 	ParseToken(token string) (int, error)
+
 	GetUserById(id int) (models.User, error)
+	GetUserIdByTgUsername(tgUsername string) (int, error)
 }
 
 type Reservation interface {

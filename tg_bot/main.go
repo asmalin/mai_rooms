@@ -37,10 +37,11 @@ func main() {
 	fmt.Println("Started!")
 
 	var buttonsPrefixes = utils.ButtonsPrefixes{
-		Building: "building",
-		Room:     "room",
-		Lesson:   "lesson",
-		Reserve:  "reserve",
+		Building:      "building",
+		Room:          "room",
+		Lesson:        "lesson",
+		Reserve:       "reserve",
+		CancelReserve: "cancel",
 	}
 
 	var allBuildings = make(map[string]models.Building)
@@ -53,12 +54,6 @@ func main() {
 		bot.SendMessage(tu.Message(
 			chatID,
 			"Здесь можно посмотреть расписание занятий на аудиторию и занять свободную.",
-		).WithReplyMarkup(
-			tu.Keyboard(
-				tu.KeyboardRow(
-					tu.KeyboardButton("home"),
-				),
-			).WithResizeKeyboard(),
 		))
 
 		ShowBuildingsPage(chatID, bot, buttonsPrefixes.Building)
@@ -163,11 +158,22 @@ func main() {
 		} else if lessonType == "reserved" {
 			msg += lesson.GetReserverName() + "\n\n" + lesson.GetComment()
 
+			userId, _ := service.GetUserIdByTgUsername(query.Message.GetChat().Username)
+
+			if userId == lesson.GetReserverId() {
+				keyRow = append(keyRow, tu.InlineKeyboardButton("Отменить бронь").WithCallbackData(buttonsPrefixes.CancelReserve+"|"+roomId+"|"+date+"|"+timeStart))
+			}
+
 		} else {
-			msg += "Свободно\n\nБронирование только для авторизованных пользователей:"
 
-			keyRow = append(keyRow, tu.InlineKeyboardButton("Забронировать").WithCallbackData(buttonsPrefixes.Reserve+"|"+roomId+"|"+date+"|"+timeStart+"|"+timeEnd))
+			_, err := service.GetUserIdByTgUsername(query.Message.GetChat().Username)
 
+			if err != nil {
+				msg += "Аудитория свободна.\nДля ее бронирования необходимо быть авторизованным (Подробнее /info)"
+
+			} else {
+				keyRow = append(keyRow, tu.InlineKeyboardButton("Забронировать").WithCallbackData(buttonsPrefixes.Reserve+"|"+roomId+"|"+date+"|"+timeStart+"|"+timeEnd))
+			}
 		}
 
 		buttons = append(buttons, keyRow)
@@ -196,7 +202,7 @@ func main() {
 		timeStart := queryData[3]
 		timeEnd := queryData[4]
 
-		err = service.Reserve(query.Message.GetChat().ID, models.LessonForReservationJSON{
+		err = service.Reserve(query.Message.GetChat().Username, models.LessonForReservationJSON{
 			RoomId:    roomId,
 			Date:      date,
 			StartTime: timeStart,
@@ -204,10 +210,9 @@ func main() {
 		})
 
 		if err != nil {
-			fmt.Println(err)
 			bot.SendMessage(tu.Message(
 				chatId,
-				"Для бронирования аудитории нужно авторизоваться.\nДля этого необходимо ввести логин и пароль в следующем формате:\n/auth <логин> <пароль>",
+				err.Error(),
 			))
 			return
 		}
@@ -229,37 +234,64 @@ func main() {
 
 	}, th.CallbackDataContains(buttonsPrefixes.Reserve))
 
-	bh.HandleMessage(func(bot *telego.Bot, message telego.Message) {
+	//cancel reserve lesson
+	bh.HandleCallbackQuery(func(bot *telego.Bot, query telego.CallbackQuery) {
+		chatId := telego.ChatID{ID: query.Message.GetChat().ID}
+		queryData := strings.Split(query.Data, "|")
 
-		query := strings.Split(message.Text, " ")
+		roomIdStr := queryData[1]
 
-		if len(query) != 3 {
+		roomId, _ := strconv.Atoi(roomIdStr)
+		date := queryData[2]
+		timeStart := queryData[3]
+
+		err = service.CancelReserve(query.Message.GetChat().Username, models.LessonForCancelReservationJSON{
+			RoomId:    roomId,
+			Date:      date,
+			StartTime: timeStart,
+		})
+
+		if err != nil {
 			bot.SendMessage(tu.Message(
-				message.Chat.ChatID(),
-				"Неверный формат.\nДля аутентификации требуется логин и пароль в следующем формате:\n/auth <логин> <пароль>",
+				chatId,
+				err.Error(),
 			))
-		} else {
-			err := service.Auth(query[1], query[2], message.Chat.ID)
-			if err != nil {
-				bot.SendMessage(tu.Message(
-					message.Chat.ChatID(),
-					"Неправильный логин или пароль!",
-				))
-				return
-			}
-			bot.SendMessage(tu.Message(
-				message.Chat.ChatID(),
-				"Авторизация прошла успешно!",
-			))
+			return
 		}
 
-	}, th.CommandEqual("auth"))
+		_, err := bot.EditMessageText(&telego.EditMessageTextParams{
+			ChatID:    chatId,
+			MessageID: query.Message.GetMessageID(),
+			Text:      "Отмена брони произведена успешно!",
+			ReplyMarkup: tu.InlineKeyboard(
+				tu.InlineKeyboardRow(
+					tu.InlineKeyboardButton("Назад").WithCallbackData(buttonsPrefixes.Room + "|" + roomIdStr),
+				),
+			),
+		})
 
-	bh.HandleMessage(func(bot *telego.Bot, message telego.Message) {
-		if message.Text == "home" {
-			ShowBuildingsPage(message.Chat.ChatID(), bot, buttonsPrefixes.Building)
+		if err != nil {
+			fmt.Println(err)
 		}
-	}, th.AnyMessage())
+
+	}, th.CallbackDataContains(buttonsPrefixes.CancelReserve))
+
+	bh.Handle(func(bot *telego.Bot, update telego.Update) {
+		ShowBuildingsPage(update.Message.Chat.ChatID(), bot, buttonsPrefixes.Building)
+	}, th.CommandEqual("home"))
+
+	bh.Handle(func(bot *telego.Bot, update telego.Update) {
+		msgText := "Здесь можно посмотреть расписание занятий на аудиторию, а также забронировать свободную.\n\n" +
+			"Для того чтобы забронировать аудиторию необходимо чтобы имя пользователя в телеграмме было привязано к аккаунту на веб-сайте." +
+			"Это можно сделать на <a href=\"" + os.Getenv("BASE_URL") + "/profile\">странице своего профиля на веб-сайте</a> " +
+			"и после авторизации ввести в поле \"tg username\" свое имя пользователя из телеграмма."
+
+		bot.SendMessage(&telego.SendMessageParams{
+			ChatID:    update.Message.Chat.ChatID(),
+			Text:      msgText,
+			ParseMode: "HTML",
+		})
+	}, th.CommandEqual("info"))
 
 	bh.Start()
 

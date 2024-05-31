@@ -5,8 +5,7 @@ export async function getAllUsers() {
     return;
   }
   try {
-    
-    const response = await fetch("/api/users", {
+    const response = await fetch("http://localhost:5001/api/users", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -32,8 +31,7 @@ export async function createUser(userData) {
     return;
   }
   try {
-    
-    const response = await fetch("/api/users/create", {
+    const response = await fetch("http://localhost:5001/api/users/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -55,9 +53,8 @@ export async function deleteUser(userId) {
     return;
   }
   try {
-    
     const response = await fetch(
-      "/api/users/delete/" + userId,
+      "http://localhost:5001/api/users/delete/" + userId,
       {
         method: "DELETE",
         headers: {
@@ -86,7 +83,7 @@ export async function updateUser(userData) {
   }
   try {
     const response = await fetch(
-      "http://localhost:8080/api/users/update/" + userData.id,
+      "http://localhost:5001/api/users/update/" + userData.id,
       {
         method: "PATCH",
         headers: {
@@ -115,7 +112,7 @@ export async function ChangePassword(oldPass, newPass) {
       newPassword: newPass,
     };
     const response = await fetch(
-      "http://localhost:8080/api/users/update/password",
+      "http://localhost:5001/api/users/update/password",
       {
         method: "PATCH",
         headers: {

@@ -6,8 +6,9 @@ type ButtonData struct {
 }
 
 type ButtonsPrefixes struct {
-	Building string
-	Room     string
-	Lesson   string
-	Reserve  string
+	Building      string
+	Room          string
+	Lesson        string
+	Reserve       string
+	CancelReserve string
 }

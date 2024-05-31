@@ -2,3 +2,25 @@
     width: 100%;
     margin: 30px 50px;
 }
+
+.qrcode_logo{
+    margin-left: 10px;
+    width: 30px;
+    cursor: pointer;
+}
+
+.qr-code-generator {
+    text-align: center;
+    background-color: white;
+    padding: 30px;
+  }
+  
+  .QRcode {
+    display: inline-block;
+  }
+  
+  .qr-image {
+    display: block;
+    margin: 0 auto;
+  }
+  

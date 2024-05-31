@@ -19,6 +19,12 @@ type LessonForReservationJSON struct {
 	Comment   string `json:"comment"`
 }
 
+type LessonForCancelReservationJSON struct {
+	RoomId    int    `json:"roomId"`
+	Date      string `json:"date"`
+	StartTime string `json:"startTime"`
+}
+
 type Lesson interface {
 	GetLector() string
 	GetStartTime() string
