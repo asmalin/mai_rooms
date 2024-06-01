@@ -21,7 +21,7 @@ const Login = ({ setUser }) => {
 
     await axios
       .post(
-        `http://localhost:5001/api/auth/login`,
+        `/api/auth/login`,
         {
           username,
           password,

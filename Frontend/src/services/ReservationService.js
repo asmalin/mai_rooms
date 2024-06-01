@@ -5,7 +5,7 @@ export async function reserveRoom(lessonForReservation) {
     return;
   }
   try {
-    const response = await fetch("http://localhost:5001/api/reserve", {
+    const response = await fetch("/api/reserve", {
       method: "POST",
       body: JSON.stringify(lessonForReservation),
       headers: {
@@ -32,17 +32,14 @@ export async function cancelReserve(lessonForCancelReservation) {
     return;
   }
   try {
-    const response = await fetch(
-      "http://localhost:5001/api/cancelReservation",
-      {
-        method: "POST",
-        body: JSON.stringify(lessonForCancelReservation),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${JSON.parse(token)}`,
-        },
-      }
-    );
+    const response = await fetch("/api/cancelReservation", {
+      method: "POST",
+      body: JSON.stringify(lessonForCancelReservation),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${JSON.parse(token)}`,
+      },
+    });
 
     if (!response.ok) {
       return "error";

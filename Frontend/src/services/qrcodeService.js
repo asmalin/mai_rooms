@@ -29,7 +29,7 @@ export async function CreateQRCodes(roomIds) {
   for (const room of roomsData) {
     const promise = new Promise((resolve, reject) => {
       QRCode.toDataURL(
-        `http://localhost:3000/rooms?roomId=${room.id}`,
+        `/rooms?roomId=${room.id}`,
         opts,
         function (err, qrCodeImageDataUrl) {
           if (err) {
@@ -96,7 +96,7 @@ function downloadWithCaption(dataurl, caption) {
 
 async function getRoomNameById(roomId) {
   try {
-    const response = await fetch("http://localhost:5001/api/room/" + roomId, {
+    const response = await fetch("/api/room/" + roomId, {
       method: "GET",
     });
 
@@ -123,7 +123,7 @@ export const QRCodeGenerator = ({ roomId }) => {
 
     fetchRoomName();
     QRCode.toDataURL(
-      `http://localhost:3000/rooms?roomId=${roomId}`,
+      `/rooms?roomId=${roomId}`,
       { width: 300, margin: 1 },
       (err, url) => {
         if (err) {

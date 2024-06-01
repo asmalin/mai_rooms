@@ -14,10 +14,20 @@
     max-width: 200px;
 }
 
+.date_block{
+    display: flex;
+    justify-content: center;
+}
+
+.date_input {
+    margin-top: 15px;
+}
+
 .roomsList{
     display: flex !important;
     flex-wrap: wrap;
     padding: 0 !important;
+    justify-content: center;
 }
 
 

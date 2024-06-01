@@ -1,6 +1,6 @@
 export async function refreshTokens() {
   try {
-    const response = await fetch("http://localhost:5001/api/auth/refresh", {
+    const response = await fetch("/api/auth/refresh", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -16,7 +16,7 @@ export async function refreshTokens() {
 
 export async function logout() {
   try {
-    const response = await fetch("http://localhost:5001/api/auth/logout", {
+    const response = await fetch("/api/auth/logout", {
       method: "GET",
       credentials: "include",
     });
@@ -39,7 +39,7 @@ export async function checkAuth() {
     return;
   }
   try {
-    const response = await fetch("http://localhost:5001/api/auth/check", {
+    const response = await fetch("/api/auth/check", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

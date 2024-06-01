@@ -25,7 +25,7 @@ function Home() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5001/api/buildings")
+      .get("/api/buildings")
       .then((response) => {
         setBuildingsList(response.data);
       })
@@ -36,7 +36,7 @@ function Home() {
 
   useEffect(() => {
     if (selectedBuilding) {
-      const apiUrl = "http://localhost:5001/api/rooms/" + selectedBuilding;
+      const apiUrl = "/api/rooms/" + selectedBuilding;
       fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => setRoomsList(data));
@@ -90,15 +90,17 @@ function Home() {
 
       {roomsList.length > 0 && (
         <form onSubmit={getRooms} className="roomSelectForm">
-          <input
-            className="date_input"
-            type="date"
-            pattern="\d{4}-\d{2}-\d{2}"
-            name="date"
-            value={selectedDate}
-            onChange={handleDateChange}
-            required
-          />
+          <div className="date_block">
+            <input
+              className="date_input"
+              type="date"
+              pattern="\d{4}-\d{2}-\d{2}"
+              name="date"
+              value={selectedDate}
+              onChange={handleDateChange}
+              required
+            />
+          </div>
           <div className="roomsList form-check">
             {roomsList.map((room) => (
               <div className="btn-room" key={room.id}>

@@ -5,7 +5,7 @@ export async function getAllUsers() {
     return;
   }
   try {
-    const response = await fetch("http://localhost:5001/api/users", {
+    const response = await fetch("/api/users", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -31,7 +31,7 @@ export async function createUser(userData) {
     return;
   }
   try {
-    const response = await fetch("http://localhost:5001/api/users/create", {
+    const response = await fetch("/api/users/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -53,16 +53,13 @@ export async function deleteUser(userId) {
     return;
   }
   try {
-    const response = await fetch(
-      "http://localhost:5001/api/users/delete/" + userId,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${JSON.parse(token)}`,
-        },
-      }
-    );
+    const response = await fetch("/api/users/delete/" + userId, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${JSON.parse(token)}`,
+      },
+    });
 
     if (!response.ok) {
       return "error";
@@ -82,17 +79,14 @@ export async function updateUser(userData) {
     return;
   }
   try {
-    const response = await fetch(
-      "http://localhost:5001/api/users/update/" + userData.id,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${JSON.parse(token)}`,
-        },
-        body: JSON.stringify(userData),
-      }
-    );
+    const response = await fetch("/api/users/update/" + userData.id, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${JSON.parse(token)}`,
+      },
+      body: JSON.stringify(userData),
+    });
 
     return response;
   } catch (error) {
@@ -111,17 +105,14 @@ export async function ChangePassword(oldPass, newPass) {
       oldPassword: oldPass,
       newPassword: newPass,
     };
-    const response = await fetch(
-      "http://localhost:5001/api/users/update/password",
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${JSON.parse(token)}`,
-        },
-        body: JSON.stringify(pass),
-      }
-    );
+    const response = await fetch("/api/users/update/password", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${JSON.parse(token)}`,
+      },
+      body: JSON.stringify(pass),
+    });
 
     return response;
   } catch (error) {
