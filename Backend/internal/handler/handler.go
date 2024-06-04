@@ -57,7 +57,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	{
 		api.POST("/reserve", h.Reserve)
 		api.POST("/cancelReservation", h.CancelReservation)
-		api.GET("/qrcodes", h.GetQRCodes)
 		api.GET("/users", h.GetAllUsers)
 		api.DELETE("/users/delete/:userId", h.DeleteUserById)
 		api.POST("/users/create", h.CreateUser)
